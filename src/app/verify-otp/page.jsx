@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import {
   InputOTP,
@@ -13,7 +13,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { ButtonLoading } from "@/components/application/ButtonLoading";
 
-function VerifyOTPPage() {
+function VerifyOTPContent() {
   const [otp, setOtp] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
@@ -193,6 +193,34 @@ function VerifyOTPPage() {
         </div>
       </div>
     </section>
+  );
+}
+
+function VerifyOTPPage() {
+  return (
+    <Suspense
+      fallback={
+        <section className="relative z-0 py-14 bg-[url('/bg-img.png')] bg-cover bg-center bg-no-repeat">
+          <div className="container">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#736c5f]"></div>
+              </div>
+              <div className="flex items-center justify-center">
+                <div className="text-center">
+                  <h1 className="text-2xl font-semibold mb-2">Loading...</h1>
+                  <p className="text-gray-600">
+                    Please wait while we load the verification page
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      }
+    >
+      <VerifyOTPContent />
+    </Suspense>
   );
 }
 

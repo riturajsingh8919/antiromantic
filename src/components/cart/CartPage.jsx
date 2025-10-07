@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Eye, Heart, Minus, Plus, X } from "lucide-react";
 import Header from "../Header";
 import Footer from "../Footer";
@@ -12,7 +12,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 
-const CartPage = () => {
+const CartPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
@@ -491,6 +491,30 @@ const CartPage = () => {
 
       <Footer />
     </>
+  );
+};
+
+const CartPage = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen">
+          <Header />
+          <div className="container mx-auto px-4 py-8">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#736c5f] mx-auto mb-4"></div>
+              <h2 className="text-xl font-semibold mb-2">Loading Cart...</h2>
+              <p className="text-gray-600">
+                Please wait while we load your cart
+              </p>
+            </div>
+          </div>
+          <Footer />
+        </div>
+      }
+    >
+      <CartPageContent />
+    </Suspense>
   );
 };
 
