@@ -244,7 +244,7 @@ const CheckoutPage = () => {
     <>
       <Header />
 
-      <div className="min-h-screen bg-[url('/store/store-sec-bg.png')] px-4 py-16 pt-[100px]">
+      <div className="min-h-screen bg-[url('/store/store-sec-bg.png')] px-4 md:px-10 py-16 pt-[100px]">
         <div className="container">
           {/* Back to Cart */}
           <div className="mb-8">

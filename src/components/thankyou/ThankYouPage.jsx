@@ -81,7 +81,7 @@ const ThankYouPage = ({ orderNumber }) => {
     <>
       <Header />
 
-      <div className="min-h-screen bg-[url('/store/store-sec-bg.png')] px-4 pt-16">
+      <div className="min-h-screen bg-[url('/store/store-sec-bg.png')] px-4 md:px-10 pt-16">
         <div className="container max-w-4xl mx-auto">
           {/* Success Header */}
           <div className="text-center mb-12">

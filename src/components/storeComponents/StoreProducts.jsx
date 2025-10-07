@@ -145,7 +145,7 @@ function StoreProducts() {
   }, []);
 
   return (
-    <div className="relative bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center px-4 xl:px-0">
+    <div className="relative bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center px-4 md:px-10">
       <div className="container py-12">
         {/* Page Title */}
         <h1 className="text-4xl font-light text-[#656056] mb-12">shop</h1>

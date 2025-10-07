@@ -118,11 +118,11 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f5f4f2] to-[#e8e6e3]">
+    <div className="min-h-screen bg-gradient-to-br from-[#f5f4f2] to-[#e8e6e3] ">
       <Header />
 
       {/* Hero Section */}
-      <div className="bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center text-text px-4 lg:px-0 pt-[64px]">
+      <div className="bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center text-text px-4 md:px-10 pt-[64px]">
         <div className="container py-12">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
             <div>
@@ -149,7 +149,7 @@ function Dashboard() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center shadow-2xl border-t-2 px-4 lg:px-0">
+      <div className="bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center shadow-2xl border-t-2 px-4 md:px-10">
         <div className="container">
           <div className="flex space-x-8">
             <button
@@ -178,7 +178,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="py-8 px-4 lg:px-0 bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center">
+      <div className="py-8 px-4 md:px-10 bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center">
         <div className="container">
           {/* Orders Tab */}
           {activeTab === "orders" && (
@@ -682,6 +682,7 @@ function Dashboard() {
           )}
         </div>
       </div>
+
       <Footer />
     </div>
   );

@@ -370,7 +370,7 @@ const RecommendedProductsCarousel = ({
 
   return (
     <div
-      className={`relative bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center px-4 xl:px-0 ${className}`}
+      className={`relative bg-[url('/store/store-sec-bg.png')] bg-no-repeat bg-cover bg-center px-4 md:px-10 ${className}`}
     >
       <div className="container">
         {/* Header with Title and View All/Navigation */}

@@ -87,7 +87,7 @@ function SidebarContent({ onItemClick, isMobile = false }) {
 
   return (
     <div
-      className="block w-full h-auto overflow-y-auto"
+      className="block w-full h-screen overflow-y-auto"
       style={{ backgroundColor: "#efece3" }}
     >
       {/* Logo */}
