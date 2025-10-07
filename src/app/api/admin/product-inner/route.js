@@ -111,6 +111,16 @@ export async function POST(request) {
       );
     }
 
+    if (body.type === "video" && (!body.videos || body.videos.length === 0)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "At least one video is required for video type",
+        },
+        { status: 400 }
+      );
+    }
+
     if (body.type === "text" && !body.description) {
       return NextResponse.json(
         {

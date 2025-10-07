@@ -191,4 +191,14 @@ button {
     min-height: 44px;
     min-width: 44px;
   }
+
+  /* Utility classes for dialog/modal fixes */
+  .reset-pointer-events {
+    pointer-events: auto !important;
+  }
+
+  /* Ensure body never gets stuck with pointer-events: none */
+  body[style*="pointer-events: none"] {
+    pointer-events: auto !important;
+  }
 }

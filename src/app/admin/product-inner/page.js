@@ -7,6 +7,7 @@ import {
   Trash2,
   MoreHorizontal,
   Image as ImageIcon,
+  Video as VideoIcon,
   Type,
   GripVertical,
   Package,
@@ -53,6 +54,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import toast from "react-hot-toast";
 import { MultiImageUpload } from "@/components/admin/MultiImageUpload";
+import { MultiVideoUpload } from "@/components/admin/MultiVideoUpload";
 
 export default function ProductInnerPage() {
   const [productInners, setProductInners] = useState([]);
@@ -61,10 +63,12 @@ export default function ProductInnerPage() {
   const [productsLoading, setProductsLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const multiImageUploadRef = useRef(null);
+  const multiVideoUploadRef = useRef(null);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({
     type: "image",
     images: [],
+    videos: [],
     description: "",
     buttonText: "",
     link: "",
@@ -74,6 +78,41 @@ export default function ProductInnerPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState("");
+
+  // Effect to handle dialog close cleanup
+  useEffect(() => {
+    if (!dialogOpen) {
+      // Reset form when dialog closes
+      setTimeout(() => {
+        setEditingItem(null);
+        setFormData({
+          type: "image",
+          images: [],
+          videos: [],
+          description: "",
+          buttonText: "",
+          link: "",
+          isActive: true,
+          order: 0,
+          productId: "",
+        });
+        // Ensure body pointer-events are reset
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+  }, [dialogOpen]);
+
+  // Custom onOpenChange handler to ensure proper cleanup
+  const handleDialogOpenChange = (open) => {
+    setDialogOpen(open);
+    if (!open) {
+      // Immediately reset body styles when dialog closes
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+        document.body.style.overflow = "";
+      }, 50);
+    }
+  };
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -167,6 +206,14 @@ export default function ProductInnerPage() {
       return;
     }
 
+    if (
+      formData.type === "video" &&
+      (!formData.videos || formData.videos.length === 0)
+    ) {
+      toast.error("Please select at least one video");
+      return;
+    }
+
     console.log("Form validation passed. Form data:", formData);
 
     if (formData.type === "text" && !formData.description.trim()) {
@@ -192,6 +239,9 @@ export default function ProductInnerPage() {
     const existingImageItems = otherItemsForProduct.filter(
       (item) => item.type === "image"
     );
+    const existingVideoItems = otherItemsForProduct.filter(
+      (item) => item.type === "video"
+    );
     const existingTextItems = otherItemsForProduct.filter(
       (item) => item.type === "text"
     );
@@ -201,6 +251,7 @@ export default function ProductInnerPage() {
       existingItemsForProduct: existingItemsForProduct.length,
       otherItemsForProduct: otherItemsForProduct.length,
       existingImageItems: existingImageItems.length,
+      existingVideoItems: existingVideoItems.length,
       existingTextItems: existingTextItems.length,
       formType: formData.type,
       isEditing: !!editingItem,
@@ -209,6 +260,13 @@ export default function ProductInnerPage() {
     if (formData.type === "image" && existingImageItems.length > 0) {
       toast.error(
         "This product already has an image type item. Only one image type is allowed per product."
+      );
+      return;
+    }
+
+    if (formData.type === "video" && existingVideoItems.length > 0) {
+      toast.error(
+        "This product already has a video type item. Only one video type is allowed per product."
       );
       return;
     }
@@ -264,6 +322,45 @@ export default function ProductInnerPage() {
         }
       }
 
+      // If it's a video type, upload the videos first
+      if (formData.type === "video" && multiVideoUploadRef.current) {
+        try {
+          // Check if there are videos to upload
+          const hasVideosToUpload = formData.videos.some((vid) => vid.file);
+          if (hasVideosToUpload) {
+            toast.loading("Uploading videos to Cloudinary...");
+          }
+
+          const uploadedVideos =
+            await multiVideoUploadRef.current.uploadAllVideos();
+          console.log("Uploaded videos:", uploadedVideos);
+
+          if (!uploadedVideos || uploadedVideos.length === 0) {
+            toast.error(
+              "No videos to upload. Please select at least one video."
+            );
+            setSubmitting(false);
+            return;
+          }
+
+          if (hasVideosToUpload) {
+            toast.dismiss(); // Remove loading toast
+            toast.success("Videos uploaded successfully!");
+          }
+
+          finalFormData.videos = uploadedVideos;
+          console.log("Final form data being sent:", finalFormData);
+        } catch (uploadError) {
+          console.error("Upload error:", uploadError);
+          toast.error(
+            "Failed to upload videos: " +
+              (uploadError.message || "Unknown error")
+          );
+          setSubmitting(false);
+          return;
+        }
+      }
+
       const url = editingItem
         ? `/api/admin/product-inner/${editingItem._id}`
         : "/api/admin/product-inner";
@@ -310,6 +407,7 @@ export default function ProductInnerPage() {
     setFormData({
       type: item.type,
       images: item.images || [],
+      videos: item.videos || [],
       description: item.description || "",
       buttonText: item.buttonText || "",
       link: item.link || "",
@@ -346,6 +444,7 @@ export default function ProductInnerPage() {
     setFormData({
       type: "image",
       images: [],
+      videos: [],
       description: "",
       buttonText: "",
       link: "",
@@ -354,10 +453,14 @@ export default function ProductInnerPage() {
       productId: selectedProduct || "",
     });
 
-    // Clear any existing image previews
+    // Clear any existing image and video previews
     if (multiImageUploadRef.current) {
       multiImageUploadRef.current.clearPreviews &&
         multiImageUploadRef.current.clearPreviews();
+    }
+    if (multiVideoUploadRef.current) {
+      multiVideoUploadRef.current.clearPreviews &&
+        multiVideoUploadRef.current.clearPreviews();
     }
   };
 
@@ -380,12 +483,25 @@ export default function ProductInnerPage() {
     }));
   };
 
+  const handleVideosChange = (videos) => {
+    // Filter out any invalid videos
+    const validVideos = videos.filter(
+      (vid) => vid && (vid.url || vid.preview || vid.file)
+    );
+
+    setFormData((prev) => ({
+      ...prev,
+      videos: validVideos,
+    }));
+  };
+
   const handleTypeChange = (type) => {
     setFormData((prev) => ({
       ...prev,
       type,
       // Reset type-specific fields when changing type
       images: type === "image" ? prev.images : [],
+      videos: type === "video" ? prev.videos : [],
       description: type === "text" ? prev.description : "",
       buttonText: type === "text" ? prev.buttonText : "",
       link: type === "text" ? prev.link : "",
@@ -404,7 +520,7 @@ export default function ProductInnerPage() {
             Manage product inner content items (images and text blocks)
           </p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
           <DialogTrigger asChild>
             <Button
               onClick={() => {
@@ -418,7 +534,7 @@ export default function ProductInnerPage() {
               <span className="sm:hidden">Add Item</span>
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto z-[50]">
             <DialogHeader>
               <DialogTitle>
                 {editingItem
@@ -470,6 +586,7 @@ export default function ProductInnerPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="image">Image</SelectItem>
+                    <SelectItem value="video">Video</SelectItem>
                     <SelectItem value="text">Text Block</SelectItem>
                   </SelectContent>
                 </Select>
@@ -494,6 +611,9 @@ export default function ProductInnerPage() {
 
                       const existingImageItems = otherItemsForProduct.filter(
                         (item) => item.type === "image"
+                      );
+                      const existingVideoItems = otherItemsForProduct.filter(
+                        (item) => item.type === "video"
                       );
                       const existingTextItems = otherItemsForProduct.filter(
                         (item) => item.type === "text"
@@ -521,6 +641,27 @@ export default function ProductInnerPage() {
                               </span>
                               {formData.type === "image" &&
                                 existingImageItems.length > 0 && (
+                                  <span className="ml-2 text-gray-600 text-base">
+                                    (Duplicate not allowed)
+                                  </span>
+                                )}
+                            </div>
+                            <div className="flex items-center">
+                              <VideoIcon className="h-3 w-3 mr-1" />
+                              <span
+                                className={
+                                  existingVideoItems.length > 0
+                                    ? "text-gray-700"
+                                    : "text-gray-500"
+                                }
+                              >
+                                Video:{" "}
+                                {existingVideoItems.length > 0
+                                  ? "✓ Already exists"
+                                  : "Not added yet"}
+                              </span>
+                              {formData.type === "video" &&
+                                existingVideoItems.length > 0 && (
                                   <span className="ml-2 text-gray-600 text-base">
                                     (Duplicate not allowed)
                                   </span>
@@ -565,6 +706,20 @@ export default function ProductInnerPage() {
                     onChange={handleImagesChange}
                     folder="product-inner"
                     maxImages={3}
+                  />
+                </div>
+              )}
+
+              {/* Video Type Fields */}
+              {formData.type === "video" && (
+                <div className="space-y-2">
+                  <Label>Product Videos (Max 2)</Label>
+                  <MultiVideoUpload
+                    ref={multiVideoUploadRef}
+                    value={formData.videos}
+                    onChange={handleVideosChange}
+                    folder="product-inner"
+                    maxVideos={2}
                   />
                 </div>
               )}
@@ -665,7 +820,7 @@ export default function ProductInnerPage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-base font-medium">Total Items</CardTitle>
@@ -683,6 +838,17 @@ export default function ProductInnerPage() {
           <CardContent>
             <div className="text-2xl font-bold">
               {productInners.filter((item) => item.type === "image").length}
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-base font-medium">Video Items</CardTitle>
+            <VideoIcon className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              {productInners.filter((item) => item.type === "video").length}
             </div>
           </CardContent>
         </Card>
@@ -773,6 +939,9 @@ export default function ProductInnerPage() {
                   const imageItems = itemsForProduct.filter(
                     (item) => item.type === "image"
                   );
+                  const videoItems = itemsForProduct.filter(
+                    (item) => item.type === "video"
+                  );
                   const textItems = itemsForProduct.filter(
                     (item) => item.type === "text"
                   );
@@ -784,6 +953,13 @@ export default function ProductInnerPage() {
                         <span className="text-base text-gray-700">
                           Image: {imageItems.length}/1{" "}
                           {imageItems.length >= 1 ? "✓" : ""}
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        <VideoIcon className="h-4 w-4 mr-1 text-gray-600" />
+                        <span className="text-base text-gray-700">
+                          Video: {videoItems.length}/1{" "}
+                          {videoItems.length >= 1 ? "✓" : ""}
                         </span>
                       </div>
                       <div className="flex items-center">
@@ -849,12 +1025,16 @@ export default function ProductInnerPage() {
                           <div className="flex items-center gap-2">
                             {item.type === "image" ? (
                               <ImageIcon className="h-4 w-4" />
+                            ) : item.type === "video" ? (
+                              <VideoIcon className="h-4 w-4" />
                             ) : (
                               <Type className="h-4 w-4" />
                             )}
                             <Badge
                               variant={
-                                item.type === "image" ? "default" : "secondary"
+                                item.type === "image" || item.type === "video"
+                                  ? "default"
+                                  : "secondary"
                               }
                             >
                               {item.type}
@@ -878,6 +1058,22 @@ export default function ProductInnerPage() {
                               </div>
                               <span className="text-base text-muted-foreground">
                                 {item.images?.length || 0} image(s)
+                              </span>
+                            </div>
+                          ) : item.type === "video" ? (
+                            <div className="flex items-center gap-2">
+                              <div className="flex -space-x-2">
+                                {item.videos?.slice(0, 2).map((video, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="h-8 w-8 bg-gray-100 rounded border-2 border-white flex items-center justify-center"
+                                  >
+                                    <VideoIcon className="h-4 w-4 text-gray-600" />
+                                  </div>
+                                ))}
+                              </div>
+                              <span className="text-base text-muted-foreground">
+                                {item.videos?.length || 0} video(s)
                               </span>
                             </div>
                           ) : (
@@ -990,12 +1186,16 @@ export default function ProductInnerPage() {
                       <div className="flex items-center gap-2">
                         {item.type === "image" ? (
                           <ImageIcon className="h-4 w-4" />
+                        ) : item.type === "video" ? (
+                          <VideoIcon className="h-4 w-4" />
                         ) : (
                           <Type className="h-4 w-4" />
                         )}
                         <Badge
                           variant={
-                            item.type === "image" ? "default" : "secondary"
+                            item.type === "image" || item.type === "video"
+                              ? "default"
+                              : "secondary"
                           }
                         >
                           {item.type}
@@ -1021,6 +1221,23 @@ export default function ProductInnerPage() {
                             <p className="text-base text-muted-foreground">
                               {item.images?.length || 0} image
                               {(item.images?.length || 0) !== 1 ? "s" : ""}
+                            </p>
+                          </div>
+                        ) : item.type === "video" ? (
+                          <div className="space-y-2">
+                            <div className="flex flex-wrap gap-2">
+                              {item.videos?.slice(0, 2).map((video, idx) => (
+                                <div
+                                  key={idx}
+                                  className="h-15 w-15 bg-gray-100 rounded border flex items-center justify-center"
+                                >
+                                  <VideoIcon className="h-6 w-6 text-gray-600" />
+                                </div>
+                              ))}
+                            </div>
+                            <p className="text-base text-muted-foreground">
+                              {item.videos?.length || 0} video
+                              {(item.videos?.length || 0) !== 1 ? "s" : ""}
                             </p>
                           </div>
                         ) : (

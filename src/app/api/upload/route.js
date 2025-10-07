@@ -6,6 +6,7 @@ export async function POST(request) {
     const formData = await request.formData();
     const file = formData.get("file");
     const folder = formData.get("folder") || "antiromantic";
+    const resourceType = formData.get("resource_type") || "image";
 
     if (!file) {
       return NextResponse.json(
@@ -14,23 +15,39 @@ export async function POST(request) {
       );
     }
 
+    // Define allowed types based on resource type
+    let allowedTypes, maxSize, maxSizeText;
+
+    if (resourceType === "video") {
+      allowedTypes = ["video/mp4", "video/mov", "video/avi", "video/webm"];
+      maxSize = 50 * 1024 * 1024; // 50MB for videos
+      maxSizeText = "50MB";
+    } else {
+      allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+      maxSize = 5 * 1024 * 1024; // 5MB for images
+      maxSizeText = "5MB";
+    }
+
     // Check file type
-    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
+      const fileTypeError =
+        resourceType === "video"
+          ? "Invalid file type. Only MP4, MOV, AVI, and WebM are allowed for videos."
+          : "Invalid file type. Only JPEG, PNG, and WebP are allowed for images.";
+
       return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid file type. Only JPEG, PNG, and WebP are allowed.",
-        },
+        { success: false, error: fileTypeError },
         { status: 400 }
       );
     }
 
-    // Check file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Check file size
     if (file.size > maxSize) {
       return NextResponse.json(
-        { success: false, error: "File size too large. Maximum size is 5MB." },
+        {
+          success: false,
+          error: `File size too large. Maximum size is ${maxSizeText}.`,
+        },
         { status: 400 }
       );
     }
@@ -40,17 +57,24 @@ export async function POST(request) {
     const buffer = Buffer.from(bytes);
     const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
 
-    // Upload to Cloudinary
-    const result = await uploadToCloudinary(base64, folder);
+    // Upload to Cloudinary with appropriate resource type
+    const result = await uploadToCloudinary(base64, folder, resourceType);
 
     return NextResponse.json({
       success: true,
       data: result,
+      secure_url: result.secure_url,
+      public_id: result.public_id,
+      width: result.width,
+      height: result.height,
+      format: result.format,
+      bytes: result.bytes,
+      duration: result.duration, // For videos
     });
   } catch (error) {
     console.error("Upload error:", error);
     return NextResponse.json(
-      { success: false, error: "Failed to upload image" },
+      { success: false, error: `Failed to upload ${resourceType || "file"}` },
       { status: 500 }
     );
   }

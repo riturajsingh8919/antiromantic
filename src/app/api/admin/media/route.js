@@ -8,30 +8,31 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// GET all images from Cloudinary
+// GET all media (images and videos) from Cloudinary
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const folder = searchParams.get("folder");
     const limit = parseInt(searchParams.get("limit")) || 100;
     const nextCursor = searchParams.get("next_cursor");
+    const resourceType = searchParams.get("resource_type") || "auto"; // auto, image, video
 
-    const searchOptions = {
-      resource_type: "image",
-      max_results: limit,
-      sort_by: [["created_at", "desc"]],
-    };
-
-    if (folder && folder !== "all") {
-      searchOptions.folder = folder;
+    let expression = "";
+    if (resourceType === "image") {
+      expression = "resource_type:image";
+    } else if (resourceType === "video") {
+      expression = "resource_type:video";
+    } else {
+      // Get both images and videos
+      expression = "resource_type:image OR resource_type:video";
     }
 
-    if (nextCursor) {
-      searchOptions.next_cursor = nextCursor;
+    if (folder && folder !== "all") {
+      expression += ` AND folder:${folder}`;
     }
 
     const result = await cloudinary.search
-      .expression("resource_type:image")
+      .expression(expression)
       .sort_by("created_at", "desc")
       .max_results(limit)
       .execute();

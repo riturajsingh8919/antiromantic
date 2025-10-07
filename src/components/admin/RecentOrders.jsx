@@ -56,7 +56,6 @@ export function RecentOrders({ orders = [] }) {
                 </Badge>
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground">
-                {order.customer?.name || "Guest"} •{" "}
                 {formatDateTime(order.createdAt)}
               </div>
             </div>

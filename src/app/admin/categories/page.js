@@ -130,6 +130,32 @@ export default function CategoriesPage() {
       description: "",
       isActive: true,
     });
+    // Ensure body pointer-events are reset
+    setTimeout(() => {
+      document.body.style.pointerEvents = "";
+    }, 100);
+  };
+
+  // Effect to cleanup body pointer-events when dialog state changes
+  useEffect(() => {
+    if (!dialogOpen) {
+      // Reset body pointer-events when dialog closes
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+      }, 100);
+    }
+  }, [dialogOpen]);
+
+  // Custom onOpenChange handler to ensure proper cleanup
+  const handleDialogOpenChange = (open) => {
+    setDialogOpen(open);
+    if (!open) {
+      // Immediately reset body styles when dialog closes
+      setTimeout(() => {
+        document.body.style.pointerEvents = "";
+        document.body.style.overflow = "";
+      }, 50);
+    }
   };
 
   const handleNameChange = (name) => {
@@ -150,7 +176,7 @@ export default function CategoriesPage() {
             Organize your products with categories
           </p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
           <DialogTrigger asChild>
             <Button onClick={() => setDialogOpen(true)}>
               <Plus className="mr-2 h-4 w-4" />

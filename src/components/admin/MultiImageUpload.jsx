@@ -295,7 +295,7 @@ export const MultiImageUpload = forwardRef(function MultiImageUpload(
                   Choose from Library
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden">
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden z-[50]">
                 <DialogHeader>
                   <DialogTitle>Media Library</DialogTitle>
                   <DialogDescription>

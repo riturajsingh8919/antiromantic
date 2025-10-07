@@ -10,7 +10,7 @@ const ProductInnerSchema = new mongoose.Schema(
     type: {
       type: String,
       required: [true, "Type is required"],
-      enum: ["image", "text"],
+      enum: ["image", "video", "text"],
     },
     // For image type - support multiple images (up to 3)
     images: [
@@ -22,6 +22,25 @@ const ProductInnerSchema = new mongoose.Schema(
         publicId: {
           type: String,
           required: true,
+        },
+      },
+    ],
+    // For video type - support multiple videos (up to 2)
+    videos: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+        publicId: {
+          type: String,
+          required: true,
+        },
+        duration: {
+          type: Number,
+        },
+        format: {
+          type: String,
         },
       },
     ],

@@ -511,40 +511,164 @@ const SingleProductPage = ({ productSlug }) => {
             <div className="text-base text-muted-foreground">Loading...</div>
           </div>
         ) : (
-          productsInner.map((item) => {
-            if (item.type === "image") {
-              // Render all images for image type items
-              return item.images?.map((image, imageIndex) => (
+          (() => {
+            // Separate videos, images, and text items
+            const videoItems = productsInner.filter(
+              (item) => item.type === "video"
+            );
+            const imageItems = productsInner.filter(
+              (item) => item.type === "image"
+            );
+            const textItems = productsInner.filter(
+              (item) => item.type === "text"
+            );
+
+            // Collect all videos from video items (up to 2)
+            const allVideos = [];
+            videoItems.forEach((item) => {
+              if (item.videos) {
+                allVideos.push(...item.videos.slice(0, 2 - allVideos.length));
+              }
+            });
+
+            // Collect all images from image items
+            const allImages = [];
+            imageItems.forEach((item) => {
+              if (item.images) {
+                allImages.push(...item.images);
+              }
+            });
+
+            const renderElements = [];
+
+            // FIRST ROW - Flexible based on content
+            if (allVideos.length >= 2) {
+              // First row: 2 videos
+              allVideos.slice(0, 2).forEach((video, videoIndex) => {
+                renderElements.push(
+                  <div
+                    key={`video-${videoIndex}`}
+                    className="relative w-full h-full flex"
+                  >
+                    <video
+                      src={video.url}
+                      loop
+                      autoPlay
+                      muted
+                      className="w-full h-full object-cover"
+                      preload="metadata"
+                    >
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                );
+              });
+            } else if (allVideos.length === 1) {
+              // First row: 1 video + 1 image
+              const video = allVideos[0];
+              renderElements.push(
+                <div key={`video-0`} className="relative w-full h-full flex">
+                  <video
+                    src={video.url}
+                    loop
+                    autoPlay
+                    muted
+                    className="w-full h-full object-cover"
+                    preload="metadata"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              );
+
+              // Add 1 image alongside the video
+              if (allImages.length > 0) {
+                const image = allImages[0];
+                renderElements.push(
+                  <div key={`image-0`} className="relative w-full h-full flex">
+                    <Image
+                      src={image.url}
+                      alt={`product-image-0`}
+                      width={500}
+                      height={500}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                );
+              }
+            } else {
+              // First row: 2 images (no videos)
+              allImages.slice(0, 2).forEach((image, imageIndex) => {
+                renderElements.push(
+                  <div
+                    key={`image-${imageIndex}`}
+                    className="relative w-full h-full flex"
+                  >
+                    <Image
+                      src={image.url}
+                      alt={`product-image-${imageIndex}`}
+                      width={500}
+                      height={500}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                );
+              });
+            }
+
+            // SECOND ROW - Always fixed: 1 image + 1 text
+            // Determine which image to use for second row
+            let secondRowImageIndex = 0;
+            if (allVideos.length === 1 && allImages.length > 0) {
+              // If first row had 1 video + 1 image, use second image
+              secondRowImageIndex = 1;
+            } else if (allVideos.length >= 2) {
+              // If first row had 2 videos, use first image
+              secondRowImageIndex = 0;
+            } else {
+              // If first row had 2 images, use third image
+              secondRowImageIndex = 2;
+            }
+
+            // Add the image for second row
+            if (allImages.length > secondRowImageIndex) {
+              const image = allImages[secondRowImageIndex];
+              renderElements.push(
                 <div
-                  key={`${item._id}-${imageIndex}`}
+                  key={`second-row-image`}
                   className="relative w-full h-full flex"
                 >
                   <Image
                     src={image.url}
-                    alt={`product-${item._id}-${imageIndex}`}
+                    alt={`product-image-${secondRowImageIndex}`}
                     width={500}
                     height={500}
                     className="w-full h-full object-cover"
                   />
                 </div>
-              ));
-            } else {
-              // Render text content
-              return (
-                <div key={item._id} className="relative w-full h-full flex">
+              );
+            }
+
+            // Add text content for second row
+            if (textItems.length > 0) {
+              const textItem = textItems[0];
+              renderElements.push(
+                <div key={`text-0`} className="relative w-full h-full flex">
                   <div className="flex flex-col p-8 lg:pr-20 justify-center text-left space-y-4">
-                    <p className="text-[#13120F]">{item.description}</p>
+                    <p className="text-[#13120F]">{textItem.description}</p>
                     <Link
-                      href={item.link}
+                      href={textItem.link}
                       className=" text-[#28251F] underline hover:text-[#736C5F] tracking-wide"
                     >
-                      {item.buttonText}
+                      {textItem.buttonText}
                     </Link>
                   </div>
                 </div>
               );
             }
-          })
+
+            return renderElements;
+          })()
         )}
       </div>
 

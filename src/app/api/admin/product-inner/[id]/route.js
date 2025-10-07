@@ -50,6 +50,16 @@ export async function PUT(request, { params }) {
       );
     }
 
+    if (body.type === "video" && (!body.videos || body.videos.length === 0)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "At least one video is required for video type",
+        },
+        { status: 400 }
+      );
+    }
+
     if (body.type === "text" && !body.description) {
       return NextResponse.json(
         {
@@ -122,6 +132,29 @@ export async function DELETE(request, { params }) {
       } catch (cloudinaryError) {
         console.error(
           "Error deleting images from Cloudinary:",
+          cloudinaryError
+        );
+        // Continue with deletion even if Cloudinary fails
+      }
+    }
+
+    // Delete videos from Cloudinary if it's a video type
+    if (
+      productInner.type === "video" &&
+      productInner.videos &&
+      productInner.videos.length > 0
+    ) {
+      try {
+        // Delete all videos from Cloudinary
+        const deletePromises = productInner.videos.map((video) =>
+          video.publicId
+            ? deleteFromCloudinary(video.publicId, "video")
+            : Promise.resolve()
+        );
+        await Promise.all(deletePromises);
+      } catch (cloudinaryError) {
+        console.error(
+          "Error deleting videos from Cloudinary:",
           cloudinaryError
         );
         // Continue with deletion even if Cloudinary fails
