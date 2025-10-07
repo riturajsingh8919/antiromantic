@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Image as ImageIcon,
+  Video as VideoIcon,
   Upload,
   Search,
   MoreVertical,
@@ -31,27 +32,35 @@ import {
   RefreshCw,
   Grid3X3,
   List,
+  Play,
 } from "lucide-react";
 import Image from "next/image";
 
 export default function MediaPage() {
   const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [videoLoading, setVideoLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [videoUploading, setVideoUploading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [videoSearchTerm, setVideoSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("grid"); // grid or list
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [imageToDelete, setImageToDelete] = useState(null);
+  const [videoToDelete, setVideoToDelete] = useState(null);
 
   useEffect(() => {
     fetchImages();
+    fetchVideos();
   }, []);
 
   const fetchImages = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/admin/media");
+      const response = await fetch("/api/admin/media?resource_type=image");
       const data = await response.json();
       if (data.success) {
         setImages(data.data);
@@ -60,6 +69,21 @@ export default function MediaPage() {
       console.error("Error fetching images:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchVideos = async () => {
+    try {
+      setVideoLoading(true);
+      const response = await fetch("/api/admin/media?resource_type=video");
+      const data = await response.json();
+      if (data.success) {
+        setVideos(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+    } finally {
+      setVideoLoading(false);
     }
   };
 
@@ -72,8 +96,9 @@ export default function MediaPage() {
       for (const file of files) {
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("resource_type", "image");
 
-        const response = await fetch("/api/admin/media/upload", {
+        const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
         });
@@ -90,6 +115,58 @@ export default function MediaPage() {
       alert("Error uploading images. Please try again.");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleVideoUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    // Validate file types
+    const validTypes = ["video/mp4", "video/mov", "video/avi", "video/webm"];
+    const invalidFiles = files.filter(
+      (file) => !validTypes.includes(file.type)
+    );
+
+    if (invalidFiles.length > 0) {
+      alert("Please select only video files (MP4, MOV, AVI, WebM)");
+      return;
+    }
+
+    // Check file sizes (max 50MB per video)
+    const maxSize = 50 * 1024 * 1024; // 50MB
+    const oversizedFiles = files.filter((file) => file.size > maxSize);
+
+    if (oversizedFiles.length > 0) {
+      alert("Video files must be smaller than 50MB each");
+      return;
+    }
+
+    setVideoUploading(true);
+    try {
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("resource_type", "video");
+
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+      }
+
+      // Refresh the videos list
+      await fetchVideos();
+      alert("Videos uploaded successfully!");
+    } catch (error) {
+      console.error("Error uploading videos:", error);
+      alert("Error uploading videos. Please try again.");
+    } finally {
+      setVideoUploading(false);
     }
   };
 
@@ -114,6 +191,30 @@ export default function MediaPage() {
     } catch (error) {
       console.error("Error deleting image:", error);
       alert(`Error deleting image: ${error.message}`);
+    }
+  };
+
+  const handleDeleteVideo = async (videoId) => {
+    try {
+      // URL encode the public_id to handle special characters and slashes
+      const encodedId = encodeURIComponent(videoId);
+      const response = await fetch(`/api/admin/media/${encodedId}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        await fetchVideos();
+        setDeleteDialogOpen(false);
+        setVideoToDelete(null);
+        alert("Video deleted successfully!");
+      } else {
+        throw new Error(data.error || "Delete failed");
+      }
+    } catch (error) {
+      console.error("Error deleting video:", error);
+      alert(`Error deleting video: ${error.message}`);
     }
   };
 
@@ -142,6 +243,16 @@ export default function MediaPage() {
     return matchesSearch;
   });
 
+  const filteredVideos = videos.filter((video) => {
+    const matchesSearch =
+      video.public_id.toLowerCase().includes(videoSearchTerm.toLowerCase()) ||
+      (video.context?.alt || "")
+        .toLowerCase()
+        .includes(videoSearchTerm.toLowerCase());
+
+    return matchesSearch;
+  });
+
   const formatFileSize = (bytes) => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -160,6 +271,13 @@ export default function MediaPage() {
     });
   };
 
+  const formatDuration = (seconds) => {
+    if (!seconds) return "0:00";
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -170,10 +288,19 @@ export default function MediaPage() {
             Upload and manage your store images
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={fetchImages} disabled={loading}>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={() => {
+              fetchImages();
+              fetchVideos();
+            }}
+            disabled={loading || videoLoading}
+          >
             <RefreshCw
-              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+              className={`h-4 w-4 mr-2 ${
+                loading || videoLoading ? "animate-spin" : ""
+              }`}
             />
             Refresh
           </Button>
@@ -189,6 +316,21 @@ export default function MediaPage() {
                 onChange={handleImageUpload}
                 className="hidden"
                 disabled={uploading}
+              />
+            </label>
+          </Button>
+          <Button asChild variant="outline">
+            <label htmlFor="upload-videos" className="cursor-pointer">
+              <VideoIcon className="h-4 w-4 mr-2" />
+              {videoUploading ? "Uploading..." : "Upload Videos"}
+              <input
+                id="upload-videos"
+                type="file"
+                multiple
+                accept="video/mp4,video/mov,video/avi,video/webm"
+                onChange={handleVideoUpload}
+                className="hidden"
+                disabled={videoUploading}
               />
             </label>
           </Button>
@@ -427,6 +569,218 @@ export default function MediaPage() {
         </CardContent>
       </Card>
 
+      {/* Videos Display */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <CardTitle>
+              Videos ({filteredVideos.length})
+              {videoSearchTerm && (
+                <span className="text-base font-normal text-muted-foreground ml-2">
+                  - Showing results for &quot;{videoSearchTerm}&quot;
+                </span>
+              )}
+            </CardTitle>
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search videos..."
+                value={videoSearchTerm}
+                onChange={(e) => setVideoSearchTerm(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {videoLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {[...Array(12)].map((_, i) => (
+                <div
+                  key={i}
+                  className="aspect-video bg-muted rounded-lg animate-pulse"
+                />
+              ))}
+            </div>
+          ) : filteredVideos.length === 0 ? (
+            <div className="text-center py-12">
+              <VideoIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-medium mb-2">
+                {videoSearchTerm ? "No videos found" : "No videos uploaded yet"}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {videoSearchTerm
+                  ? "Try adjusting your search terms"
+                  : "Upload your first video to get started"}
+              </p>
+              {!videoSearchTerm && (
+                <Button asChild variant="outline">
+                  <label
+                    htmlFor="upload-videos-empty"
+                    className="cursor-pointer"
+                  >
+                    <VideoIcon className="h-4 w-4 mr-2" />
+                    Upload Videos
+                    <input
+                      id="upload-videos-empty"
+                      type="file"
+                      multiple
+                      accept="video/mp4,video/mov,video/avi,video/webm"
+                      onChange={handleVideoUpload}
+                      className="hidden"
+                      disabled={videoUploading}
+                    />
+                  </label>
+                </Button>
+              )}
+            </div>
+          ) : viewMode === "grid" ? (
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+              {filteredVideos.map((video) => (
+                <div
+                  key={video.public_id}
+                  className="group relative aspect-video bg-muted rounded-lg overflow-hidden border hover:shadow-md transition-shadow"
+                >
+                  <video
+                    src={video.secure_url}
+                    className="w-full h-full object-cover"
+                    preload="metadata"
+                  />
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <Play className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                    {formatDuration(video.duration)}
+                  </div>
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => setSelectedVideo(video)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size="sm" variant="secondary">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() => copyToClipboard(video.secure_url)}
+                          >
+                            <Copy className="h-4 w-4 mr-2" />
+                            Copy URL
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              downloadImage(
+                                video.secure_url,
+                                video.public_id.split("/").pop()
+                              )
+                            }
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            Download
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setVideoToDelete(video);
+                              setDeleteDialogOpen(true);
+                            }}
+                            className="text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {filteredVideos.map((video) => (
+                <div
+                  key={video.public_id}
+                  className="flex items-center gap-4 p-4 border rounded-lg hover:bg-muted/50"
+                >
+                  <div className="relative w-24 h-16 bg-muted rounded overflow-hidden flex-shrink-0">
+                    <video
+                      src={video.secure_url}
+                      className="w-full h-full object-cover"
+                      preload="metadata"
+                    />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                      <Play className="h-4 w-4 text-white" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium truncate">
+                      {video.public_id.split("/").pop()}
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      {formatFileSize(video.bytes)} •{" "}
+                      {formatDuration(video.duration)} •{" "}
+                      {formatDate(video.created_at)}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedVideo(video)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="sm" variant="outline">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onClick={() => copyToClipboard(video.secure_url)}
+                        >
+                          <Copy className="h-4 w-4 mr-2" />
+                          Copy URL
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            downloadImage(
+                              video.secure_url,
+                              video.public_id.split("/").pop()
+                            )
+                          }
+                        >
+                          <Download className="h-4 w-4 mr-2" />
+                          Download
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setVideoToDelete(video);
+                            setDeleteDialogOpen(true);
+                          }}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Image Preview Dialog */}
       {selectedImage && (
         <Dialog
@@ -489,14 +843,83 @@ export default function MediaPage() {
         </Dialog>
       )}
 
+      {/* Video Preview Dialog */}
+      {selectedVideo && (
+        <Dialog
+          open={!!selectedVideo}
+          onOpenChange={() => setSelectedVideo(null)}
+        >
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>
+                {selectedVideo.public_id.split("/").pop()}
+              </DialogTitle>
+              <DialogDescription>Video details and preview</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2 text-sm">
+              <div>
+                <strong>Format:</strong> {selectedVideo.format?.toUpperCase()}
+              </div>
+              <div>
+                <strong>Duration:</strong>{" "}
+                {formatDuration(selectedVideo.duration)}
+              </div>
+              <div>
+                <strong>Dimensions:</strong> {selectedVideo.width} x{" "}
+                {selectedVideo.height}
+              </div>
+              <div>
+                <strong>Size:</strong> {formatFileSize(selectedVideo.bytes)}
+              </div>
+              <div>
+                <strong>Created:</strong> {formatDate(selectedVideo.created_at)}
+              </div>
+            </div>
+            <div className="relative aspect-video max-h-96 bg-muted rounded overflow-hidden">
+              <video
+                src={selectedVideo.secure_url}
+                controls
+                className="w-full h-full object-cover"
+                preload="metadata"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => copyToClipboard(selectedVideo.secure_url)}
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy URL
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() =>
+                  downloadImage(
+                    selectedVideo.secure_url,
+                    selectedVideo.public_id
+                  )
+                }
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Download
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Image</DialogTitle>
+            <DialogTitle>
+              Delete {imageToDelete ? "Image" : "Video"}
+            </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this image? This action cannot be
-              undone.
+              Are you sure you want to delete this{" "}
+              {imageToDelete ? "image" : "video"}? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           {imageToDelete && (
@@ -515,19 +938,43 @@ export default function MediaPage() {
               </span>
             </div>
           )}
+          {videoToDelete && (
+            <div className="flex items-center gap-3 p-3 border rounded">
+              <div className="relative w-12 h-8 bg-muted rounded overflow-hidden">
+                <video
+                  src={videoToDelete.secure_url}
+                  className="w-full h-full object-cover"
+                  preload="metadata"
+                />
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <Play className="h-3 w-3 text-white" />
+                </div>
+              </div>
+              <span className="font-medium">
+                {videoToDelete.public_id.split("/").pop()}
+              </span>
+            </div>
+          )}
           <DialogFooter>
             <Button
               variant="outline"
               onClick={() => {
                 setDeleteDialogOpen(false);
                 setImageToDelete(null);
+                setVideoToDelete(null);
               }}
             >
               Cancel
             </Button>
             <Button
               variant="destructive"
-              onClick={() => handleDeleteImage(imageToDelete.public_id)}
+              onClick={() => {
+                if (imageToDelete) {
+                  handleDeleteImage(imageToDelete.public_id);
+                } else if (videoToDelete) {
+                  handleDeleteVideo(videoToDelete.public_id);
+                }
+              }}
             >
               Delete
             </Button>

@@ -2,6 +2,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CartProvider } from "@/contexts/CartContext";
+import GoToTopButton from "@/components/ui/GoToTopButton";
 import "./globals.css";
 
 export const metadata = {
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
             <CartProvider>{children}</CartProvider>
           </WishlistProvider>
         </AuthProvider>
+        <GoToTopButton />
         <Toaster position="top-right" reverseOrder={false} />
       </body>
     </html>
