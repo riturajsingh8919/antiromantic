@@ -32,7 +32,7 @@ function AuthSection({
     return (
       <ProfileModal textColor={textColor}>
         <button
-          className={`${getTextColor()} text-[12px] md:text-lg cursor-pointer hover:opacity-70 transition-opacity`}
+          className={`${getTextColor()} text-base md:text-lg cursor-pointer hover:opacity-70 transition-opacity`}
         >
           Profile
         </button>
@@ -48,7 +48,7 @@ function AuthSection({
   return (
     <button
       onClick={handleLoginClick}
-      className={`${getTextColor()} text-[12px] md:text-lg cursor-pointer hover:opacity-70 transition-opacity`}
+      className={`${getTextColor()} text-base md:text-lg cursor-pointer hover:opacity-70 transition-opacity`}
     >
       Log in
     </button>

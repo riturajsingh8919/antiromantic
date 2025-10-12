@@ -5,6 +5,20 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: "Arboria";
+  src: url("../../public/fonts/Arboria-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Arboria";
+  src: url("../../public/fonts/Arboria-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 @font-face {
   font-family: "Luminaire";
@@ -75,6 +89,7 @@
 body {
   font-family: var(--font-arboria), Arial, Helvetica, sans-serif;
   text-transform: lowercase !important;
+  overflow-x: hidden;
 }
 a,
 button,
@@ -103,7 +118,7 @@ h6 {
 }
 
 header.scrolled {
-  background-color: #ffffff84;
+  background-color: #ffffff26;
   backdrop-filter: blur(10px);
   transition: background-color 0.3s ease;
 }

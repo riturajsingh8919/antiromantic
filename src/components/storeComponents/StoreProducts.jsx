@@ -159,10 +159,10 @@ function StoreProducts() {
                 key={category.key}
                 onClick={() => setSelectedCategory(category.key)}
                 className={`
-                text-lg font-medium tracking-wide transition-all duration-300 cursor-pointer
+                text-lg font-normal tracking-wide transition-all duration-300 cursor-pointer
                 ${
                   selectedCategory === category.key
-                    ? "text-[#28251F] border-b border-[#28251F] pb-1 !font-bold"
+                    ? "text-[#28251F] border-b border-[#28251F] pb-1 !font-medium"
                     : "text-[#312D26] hover:text-gray-700"
                 }
               `}
@@ -189,15 +189,15 @@ function StoreProducts() {
               </button>
 
               {showSortDropdown && (
-                <div className="absolute top-8 right-0 bg-white/85 border border-gray-200 rounded-sm shadow-lg py-2 min-w-[180px] z-10">
+                <div className="absolute top-8 right-0 bg-[#F7F5EB]/85 border border-gray-200 rounded-sm shadow-lg py-2 min-w-[180px] z-10">
                   <button
                     onClick={() => {
                       setSortBy("price-low-high");
                       setShowSortDropdown(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-gray-100  ${
+                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-white  ${
                       sortBy === "price-low-high"
-                        ? "text-[#312D26] bg-gray-200"
+                        ? "text-[#312D26] bg-white"
                         : "text-[#312D26]"
                     }`}
                   >
@@ -208,9 +208,9 @@ function StoreProducts() {
                       setSortBy("price-high-low");
                       setShowSortDropdown(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-gray-100 ${
+                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-white ${
                       sortBy === "price-high-low"
-                        ? "text-[#312D26] bg-gray-200"
+                        ? "text-[#312D26] bg-white"
                         : "text-[#312D26]"
                     }`}
                   >
@@ -221,9 +221,9 @@ function StoreProducts() {
                       setSortBy("date-newest");
                       setShowSortDropdown(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-gray-100 ${
+                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-white ${
                       sortBy === "date-newest"
-                        ? "text-[#312D26] bg-gray-200"
+                        ? "text-[#312D26] bg-white"
                         : "text-[#312D26]"
                     }`}
                   >
@@ -234,9 +234,9 @@ function StoreProducts() {
                       setSortBy("date-oldest");
                       setShowSortDropdown(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-gray-100 ${
+                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-white ${
                       sortBy === "date-oldest"
-                        ? "text-[#312D26] bg-gray-200"
+                        ? "text-[#312D26] bg-white"
                         : "text-[#312D26]"
                     }`}
                   >
@@ -262,15 +262,15 @@ function StoreProducts() {
               </button>
 
               {showSizeDropdown && (
-                <div className="absolute top-8 right-0 bg-white/85 border border-gray-200 rounded-sm shadow-lg py-2 min-w-[150px] z-10">
+                <div className="absolute top-8 right-0 bg-[#F7F5EB]/85 border border-gray-200 rounded-sm shadow-lg py-2 min-w-[150px] z-10">
                   <button
                     onClick={() => {
                       setSelectedSize("all");
                       setShowSizeDropdown(false);
                     }}
-                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-gray-100 ${
+                    className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-white ${
                       selectedSize === "all"
-                        ? "text-[#312D26] bg-gray-200"
+                        ? "text-[#312D26] bg-white"
                         : "text-[#312D26]"
                     }`}
                   >
@@ -283,9 +283,9 @@ function StoreProducts() {
                         setSelectedSize(size);
                         setShowSizeDropdown(false);
                       }}
-                      className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-gray-100 ${
+                      className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-white ${
                         selectedSize === size
-                          ? "text-[#312D26] bg-gray-200"
+                          ? "text-[#312D26] bg-white"
                           : "text-[#312D26]"
                       }`}
                     >
@@ -311,7 +311,7 @@ function StoreProducts() {
               </button>
 
               {showFilterDropdown && (
-                <div className="absolute top-8 right-0 bg-white/85 border border-gray-200 rounded-sm shadow-lg py-4 min-w-[200px] z-10">
+                <div className="absolute top-8 right-0 bg-[#F7F5EB]/85 border border-gray-200 rounded-sm shadow-lg py-4 min-w-[300px] z-10">
                   {/* Price Filter */}
                   <div className="px-4 pb-3">
                     <h4 className="text-lg text-[#312D26] mb-3">Max Price</h4>
@@ -405,16 +405,16 @@ function StoreProducts() {
                 {/* Product Info */}
                 <div className="flex justify-between items-start">
                   <div className="text-left flex-1">
-                    <h3 className="text-base font-medium text-[#28251F] mb-1 tracking-wide capitalize">
+                    <h3 className="text-base font-normal text-[#28251F] mb-1 tracking-wide capitalize">
                       {product.name}
                     </h3>
                     <div className="flex items-center gap-2 mb-1">
-                      <p className="text-lg text-[#736C5F] font-bold">
+                      <p className="text-lg text-[#736C5F] font-medium">
                         inr{product.price.toLocaleString()}
                       </p>
                       {product.comparePrice &&
                         product.comparePrice > product.price && (
-                          <p className="text-base text-gray-400 line-through">
+                          <p className="text-base text-[#736C5F] line-through">
                             inr{product.comparePrice.toLocaleString()}
                           </p>
                         )}

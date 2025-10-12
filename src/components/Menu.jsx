@@ -16,14 +16,14 @@ function Menu({ isOpen, onClose }) {
   };
   return (
     <div
-      className={`fixed top-0 left-0 w-full h-screen bg-white/85 z-40 transition-transform duration-500 px-4 py-2 md:px-10 pt-[64px] lg:pt-0 ease-in-out ${
+      className={`fixed top-0 left-0 w-full h-screen bg-[#F5F3E9]/90 z-40 transition-transform duration-500 px-4 py-2 md:px-10 pt-[64px] lg:pt-0 ease-in-out ${
         isOpen ? "translate-y-0" : "-translate-y-full"
       }`}
     >
       {/* Close button - moved to top for better visibility */}
       <button
         onClick={onClose}
-        className="absolute top-16 right-24 cursor-pointer z-50 text-xl text-black font-medium hover:underline"
+        className="absolute top-16 right-4 md:right-[45px] 2xl:right-21 cursor-pointer z-50 text-xl text-black font-normal hover:underline"
       >
         close
       </button>
@@ -32,60 +32,60 @@ function Menu({ isOpen, onClose }) {
 
       <div className="container flex items-start lg:items-center min-h-[100dvh]">
         <nav className="flex flex-col space-y-4 md:space-y-6 w-full">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 md:mb-8 text-[#736C5F]">
+          <h2 className="text-2xl md:text-3xl font-normal mb-6 md:mb-8 text-[#736C5F]">
             shop
           </h2>
           <Link
             href="/"
             onClick={onClose}
-            className="text-lg md:text-xl text-[#736C5F] hover:opacity-70 transition-opacity hover:underline w-fit"
+            className="text-lg md:text-xl text-[#9D978D] hover:opacity-70 transition-opacity hover:underline w-fit"
           >
             home
           </Link>
           <Link
             href="/store"
             onClick={onClose}
-            className="text-lg md:text-xl text-[#736C5F] hover:opacity-70 transition-opacity hover:underline w-fit"
+            className="text-lg md:text-xl text-[#9D978D] hover:opacity-70 transition-opacity hover:underline w-fit"
           >
             all
           </Link>
           <Link
             href="/store?category=tops"
             onClick={onClose}
-            className="text-lg md:text-xl text-[#736C5F] hover:opacity-70 transition-opacity hover:underline w-fit"
+            className="text-lg md:text-xl text-[#9D978D] hover:opacity-70 transition-opacity hover:underline w-fit"
           >
             tops
           </Link>
           <Link
             href="/store?category=bottoms"
             onClick={onClose}
-            className="text-lg md:text-xl text-[#736C5F] hover:opacity-70 transition-opacity hover:underline w-fit"
+            className="text-lg md:text-xl text-[#9D978D] hover:opacity-70 transition-opacity hover:underline w-fit"
           >
             bottoms
           </Link>
           <Link
             href="/store?category=dresses"
             onClick={onClose}
-            className="text-lg md:text-xl text-[#736C5F] hover:opacity-70 transition-opacity hover:underline w-fit"
+            className="text-lg md:text-xl text-[#9D978D] hover:opacity-70 transition-opacity hover:underline w-fit"
           >
             dresses
           </Link>
           <Link
             href="/store?category=shorts"
             onClick={onClose}
-            className="text-lg md:text-xl text-[#736C5F] hover:opacity-70 transition-opacity hover:underline w-fit"
+            className="text-lg md:text-xl text-[#9D978D] hover:opacity-70 transition-opacity hover:underline w-fit"
           >
             shorts
           </Link>
 
           <div className="mt-4 space-y-3 md:space-y-4">
-            <Link
+            {/* <Link
               href="/collection"
               onClick={onClose}
               className="text-xl md:text-2xl text-[#736C5F] hover:opacity-70 transition-opacity block hover:underline w-fit"
             >
               collection
-            </Link>
+            </Link> */}
             <Link
               href="/about-us"
               onClick={onClose}

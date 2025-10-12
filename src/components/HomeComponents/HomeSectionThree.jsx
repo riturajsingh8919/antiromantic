@@ -48,10 +48,10 @@ function HomeSectionThree() {
   return (
     <section className="relative bg-[url('/home-sec-3-bg.png')] bg-no-repeat bg-cover py-16 md:px-10">
       <div className="container flex items-center justify-center">
-        <div className="relative flex flex-col lg:flex-row gap-4 lg:gap-16 bg-[url('/home-sec-3-bg-front.png')] bg-no-repeat bg-cover lg:w-[100%] x1280 xl:w-[72%] p-4 md:p-20">
+        <div className="relative flex flex-col md:flex-row gap-4 lg:gap-16 bg-[url('/home-sec-3-bg-front.png')] bg-no-repeat bg-cover lg:w-[100%] x1280 xl:w-[72%] p-4 md:p-10 lg:p-15 xl:p-20">
           {/* Animated Image */}
           <motion.div
-            className="relative lg:w-[40%]"
+            className="relative md:w-[40%]"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
@@ -68,7 +68,7 @@ function HomeSectionThree() {
 
           {/* Animated Text Content */}
           <motion.div
-            className="relative lg:w-[60%] flex flex-col gap-4"
+            className="relative md:w-[60%] flex flex-col gap-4"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
@@ -100,7 +100,12 @@ function HomeSectionThree() {
                 </span>
                 .
               </p>
-              <h3 className="text-[#817C73] text-lg underline">about us</h3>
+              <Link
+                href="/about-us"
+                className="text-[#817C73] text-lg underline"
+              >
+                about us
+              </Link>
             </motion.div>
 
             {/* Second paragraph section */}
@@ -113,7 +118,10 @@ function HomeSectionThree() {
                   you're wearing purpose.
                 </span>
               </p>
-              <Link href="#" className="text-text underline lg:ml-20 w-fit">
+              <Link
+                href="/store"
+                className="text-text underline lg:ml-20 w-fit"
+              >
                 know more
               </Link>
             </motion.div>
@@ -129,7 +137,7 @@ function HomeSectionThree() {
                   alt="icon 1"
                   width={70}
                   height={70}
-                  className="w-auto h-full object-cover"
+                  className="w-auto h-[100px] lg:h-full object-contain"
                 />
               </div>
               <div>
@@ -138,7 +146,7 @@ function HomeSectionThree() {
                   alt="icon 2"
                   width={70}
                   height={70}
-                  className="w-auto h-full object-cover"
+                  className="w-auto h-[100px] lg:h-full object-contain"
                 />
               </div>
               <div>
@@ -147,7 +155,7 @@ function HomeSectionThree() {
                   alt="icon 1"
                   width={70}
                   height={70}
-                  className="w-auto h-full object-cover"
+                  className="w-auto h-[100px] lg:h-full object-contain"
                 />
               </div>
             </motion.div>

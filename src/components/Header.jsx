@@ -9,7 +9,7 @@ import AuthSection from "./auth/AuthSection";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 
-function Header({ textcolor = "#F7F5EB" }) {
+function Header({ textcolor = "#28251F" }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [shouldUseWhiteText, setShouldUseWhiteText] = useState(false);
@@ -70,9 +70,9 @@ function Header({ textcolor = "#F7F5EB" }) {
     const useWhiteText = shouldUseWhiteText && !isScrolled;
 
     if (useWhiteText) {
-      color = "text-white";
+      color = "text-[#F7F5EB]";
     } else if (isScrolled) {
-      color = "text-black";
+      color = "text-[#28251F]";
     } else {
       color = `text-[${textcolor}]`;
     }
@@ -90,7 +90,7 @@ function Header({ textcolor = "#F7F5EB" }) {
           <div className="flex items-center justify-between">
             <div className="flex cursor-pointer" onClick={toggleMenu}>
               <Image
-                className="w-[120px] sm:w-[150px] md:w-[200px] h-auto object-contain"
+                className="w-[150px] md:w-[200px] h-auto object-contain"
                 src="/logo.svg"
                 alt="logo"
                 width={254}
@@ -100,14 +100,14 @@ function Header({ textcolor = "#F7F5EB" }) {
             <div className="flex gap-3 md:gap-6 items-center">
               <Link href="/cart?tab=wishlist">
                 <button
-                  className={`${getTextColor()} text-[12px] md:text-lg cursor-pointer hover:opacity-80 transition-opacity`}
+                  className={`${getTextColor()} text-base md:text-lg cursor-pointer hover:opacity-80 transition-opacity`}
                 >
                   wishlist({getWishlistCount()})
                 </button>
               </Link>
               <Link href="/cart?tab=cart">
                 <button
-                  className={`${getTextColor()} text-[12px] md:text-lg cursor-pointer hover:opacity-80 transition-opacity`}
+                  className={`${getTextColor()} text-base md:text-lg cursor-pointer hover:opacity-80 transition-opacity`}
                 >
                   cart({getCartCount()})
                 </button>

@@ -5,26 +5,6 @@ import React from "react";
 import { motion } from "framer-motion";
 
 function AboutSectionFive() {
-  // Image animation - slide from left
-  const imageVariants = {
-    hidden: {
-      opacity: 0,
-      x: -80,
-      scale: 0.9,
-      rotateY: -15,
-    },
-    visible: {
-      opacity: 1,
-      x: 0,
-      scale: 1,
-      rotateY: 0,
-      transition: {
-        duration: 1.2,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
-
   // Heading animation
   const headingVariants = {
     hidden: {
@@ -88,23 +68,17 @@ function AboutSectionFive() {
   return (
     <section className="relative px-4 md:px-10 bg-[url('/about/section-5-bg.svg')] bg-cover bg-center bg-no-repeat py-20">
       <div className="container">
-        <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center xl:max-w-[80%] xl:gap-[15%] mx-auto">
-          {/* Left side - Image */}
-          <motion.div
-            className="relative flex items-center justify-center"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            variants={imageVariants}
-          >
+        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 items-center xl:max-w-[80%] xl:gap-[15%] mx-auto">
+          {/* Left side - Image (no animation) */}
+          <div className="relative flex items-center justify-center">
             <Image
               src="/about/section-5-img.png"
               alt="Section 5 Icon"
               width={500}
               height={500}
-              className="w-full lg:w-auto h-full lg:h-[70vh] object-cover"
+              className="w-full md:w-auto h-full md:h-[70vh] object-cover"
             />
-          </motion.div>
+          </div>
 
           {/* Right side - Text content */}
           <motion.div

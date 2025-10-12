@@ -86,7 +86,7 @@ function ProfileModal({ children, textColor = "#F7F5EB" }) {
             onClick={handleAdminClick}
           >
             <Shield className="mr-2 h-4 w-4" style={{ color: "#736c5f" }} />
-            <span className="font-medium">Admin Dashboard</span>
+            <span className="font-normal">Admin Dashboard</span>
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem
@@ -94,7 +94,7 @@ function ProfileModal({ children, textColor = "#F7F5EB" }) {
             onClick={handleUserDashboard}
           >
             <User className="mr-2 h-4 w-4" style={{ color: "#736c5f" }} />
-            <span className="font-medium">My Dashboard</span>
+            <span className="font-normal">My Dashboard</span>
           </DropdownMenuItem>
         )}
 
