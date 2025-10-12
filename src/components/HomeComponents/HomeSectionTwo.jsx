@@ -9,30 +9,38 @@ function HomeSectionTwo() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 
-  // Fade in with stagger delays
-  const fadeIn = (delay = 0) => ({
-    initial: { opacity: 0, y: 20 },
+  // Curtain reveal animation - content reveals from center using clip-path
+  const curtainReveal = (delay = 0) => ({
+    initial: {
+      clipPath: "inset(0% 50% 0% 50%)",
+      opacity: 0,
+    },
     animate: {
+      clipPath: "inset(0% 0% 0% 0%)",
       opacity: 1,
-      y: 0,
       transition: {
-        duration: 0.8,
+        duration: 1,
         ease: [0.22, 1, 0.36, 1],
         delay: delay,
       },
     },
   });
 
-  // Video zoom in
-  const zoomIn = {
-    initial: { scale: 0.5, opacity: 0 },
+  // Video zoom in with curtain reveal
+  const videoReveal = {
+    initial: {
+      clipPath: "inset(0% 50% 0% 50%)",
+      scale: 0.8,
+      opacity: 0,
+    },
     animate: {
+      clipPath: "inset(0% 0% 0% 0%)",
       scale: 1,
       opacity: 1,
       transition: {
-        duration: 0.8,
+        duration: 1.2,
         ease: [0.22, 1, 0.36, 1],
-        delay: 0.5,
+        delay: 0.6,
       },
     },
   };
@@ -49,7 +57,7 @@ function HomeSectionTwo() {
               className="text-[#827C71] text-xl lg:text-3xl"
               initial="initial"
               animate={isInView ? "animate" : "initial"}
-              variants={fadeIn(0)}
+              variants={curtainReveal(0)}
             >
               Where Every Stitch{" "}
             </motion.h2>
@@ -57,7 +65,7 @@ function HomeSectionTwo() {
               className="text-[#827C71] flex gap-2 items-center text-base"
               initial="initial"
               animate={isInView ? "animate" : "initial"}
-              variants={fadeIn(0.2)}
+              variants={curtainReveal(0.2)}
             >
               <span>
                 Our thoughtfully crafted pieces
@@ -77,14 +85,14 @@ function HomeSectionTwo() {
               className="text-[#827C71] text-xl lg:text-3xl"
               initial="initial"
               animate={isInView ? "animate" : "initial"}
-              variants={fadeIn(0.4)}
+              variants={curtainReveal(0.4)}
             >
               speaks
             </motion.h2>
             <motion.div
               initial="initial"
               animate={isInView ? "animate" : "initial"}
-              variants={zoomIn}
+              variants={videoReveal}
             >
               <video
                 src="/home2.mp4"
@@ -102,7 +110,7 @@ function HomeSectionTwo() {
               className="text-[#827C71] text-xl lg:text-3xl"
               initial="initial"
               animate={isInView ? "animate" : "initial"}
-              variants={fadeIn(0.6)}
+              variants={curtainReveal(0.8)}
             >
               self-love
             </motion.h2>

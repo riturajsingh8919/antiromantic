@@ -460,8 +460,8 @@ function StoreProducts() {
                     )}
 
                     {/* Hover Overlay with View Product */}
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <div className="flex text-sm md:text-[12px] xl:text-base">
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="flex text-xl">
                         <span className="text-[#28251F] font-normal">
                           View Product
                         </span>
