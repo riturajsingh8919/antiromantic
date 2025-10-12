@@ -18,8 +18,17 @@ function VerifyOTPContent() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [email, setEmail] = useState("");
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Format time as MM:SS
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
 
   useEffect(() => {
     const emailParam = searchParams.get("email");
@@ -30,6 +39,29 @@ function VerifyOTPContent() {
       router.push("/signin");
     }
   }, [searchParams, router]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    let interval;
+    if (timeLeft > 0) {
+      setIsBlocked(true);
+      interval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            setIsBlocked(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      setIsBlocked(false);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timeLeft]);
 
   const handleVerifyOTP = async () => {
     if (!otp || otp.length !== 6) {
@@ -65,6 +97,11 @@ function VerifyOTPContent() {
   };
 
   const handleResendOTP = async () => {
+    if (isBlocked) {
+      toast.error("Please wait before requesting another OTP");
+      return;
+    }
+
     try {
       setIsResending(true);
       const response = await axios.post("/api/resend-otp", {
@@ -74,12 +111,21 @@ function VerifyOTPContent() {
       if (response.data.success) {
         toast.success("New OTP sent to your email!");
         setOtp(""); // Clear current OTP
+        // Set 10-minute cooldown
+        setTimeLeft(600); // 10 minutes = 600 seconds
       } else {
         toast.error(response.data.message || "Failed to resend OTP");
       }
     } catch (error) {
       if (error.response && error.response.data) {
-        toast.error(error.response.data.message || "Failed to resend OTP");
+        const errorData = error.response.data;
+        if (error.response.status === 429 && errorData.timeLeft) {
+          // Rate limited - set the remaining time
+          setTimeLeft(errorData.timeLeft);
+          toast.error(errorData.message);
+        } else {
+          toast.error(errorData.message || "Failed to resend OTP");
+        }
       } else {
         toast.error("Something went wrong. Please try again.");
       }
@@ -117,14 +163,14 @@ function VerifyOTPContent() {
               </h2>
               <p className="text-text text-base">
                 We've sent a 6-digit verification code to{" "}
-                <span className="font-bold">{email}</span>
+                <span className="font-normal underline">{email}</span>
               </p>
             </div>
 
             {/* OTP Verification Form */}
             <div className="flex flex-col gap-6 mt-6">
               <div className="flex flex-col items-start space-y-4">
-                <label className="text-base font-medium text-text">
+                <label className="text-base font-normal text-text">
                   Enter verification code
                 </label>
                 <InputOTP
@@ -178,10 +224,18 @@ function VerifyOTPContent() {
                   <Button
                     variant="link"
                     onClick={handleResendOTP}
-                    disabled={isResending}
-                    className="p-0 h-auto text-text text-base hover:underline cursor-pointer"
+                    disabled={isResending || isBlocked}
+                    className={`p-0 h-auto text-base font-normal underline ${
+                      isBlocked
+                        ? "text-[#A19888] cursor-not-allowed"
+                        : "text-text cursor-pointer"
+                    }`}
                   >
-                    {isResending ? "Sending..." : "Resend OTP"}
+                    {isResending
+                      ? "Sending..."
+                      : isBlocked
+                      ? `Resend OTP (${formatTime(timeLeft)})`
+                      : "Resend OTP"}
                   </Button>
                 </div>
                 <div className="text-base text-text text-left">

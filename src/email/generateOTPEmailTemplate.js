@@ -16,8 +16,8 @@ export function generateOTPEmailTemplate(otp) {
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #2d3748;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #E4DFD3;
+            background: #736C5F;
             margin: 0;
             padding: 40px 20px;
             min-height: 100vh;
@@ -34,7 +34,7 @@ export function generateOTPEmailTemplate(otp) {
         }
         
         .header-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #28251F;
             padding: 40px 30px;
             text-align: center;
             position: relative;
@@ -62,7 +62,7 @@ export function generateOTPEmailTemplate(otp) {
             font-family: 'Playfair Display', serif;
             font-size: 32px;
             font-weight: 700;
-            color: #ffffff;
+            color: #E4DFD3;
             margin-bottom: 8px;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             position: relative;
@@ -71,7 +71,7 @@ export function generateOTPEmailTemplate(otp) {
         
         .header-subtitle {
             font-size: 18px;
-            color: rgba(255, 255, 255, 0.9);
+            color: #E4DFD3;
             font-weight: 300;
             position: relative;
             z-index: 1;
@@ -85,13 +85,13 @@ export function generateOTPEmailTemplate(otp) {
         .greeting {
             font-size: 18px;
             font-weight: 500;
-            color: #2d3748;
+            color: #28251F;
             margin-bottom: 20px;
         }
         
         .main-text {
             font-size: 16px;
-            color: #4a5568;
+            color: #736C5F;
             margin-bottom: 35px;
             line-height: 1.7;
         }
@@ -104,22 +104,22 @@ export function generateOTPEmailTemplate(otp) {
         .otp-label {
             font-size: 14px;
             font-weight: 600;
-            color: #667eea;
+            color: #28251F;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 15px;
         }
         
         .otp-code {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #ffffff;
+            background: #736C5F;
+            color: #E4DFD3;
             padding: 25px 40px;
             font-size: 36px;
             font-weight: 700;
             letter-spacing: 8px;
             border-radius: 15px;
             display: inline-block;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 30px rgba(115, 108, 95, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -131,7 +131,7 @@ export function generateOTPEmailTemplate(otp) {
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(228, 223, 211, 0.2), transparent);
             transition: left 0.5s;
         }
         
@@ -140,17 +140,17 @@ export function generateOTPEmailTemplate(otp) {
         }
         
         .security-notice {
-            background: linear-gradient(135deg, #fed7d7 0%, #fbb6ce 100%);
+            background: #E4DFD3;
             padding: 20px;
             border-radius: 12px;
             margin: 30px 0;
-            border-left: 4px solid #e53e3e;
+            border-left: 4px solid #28251F;
         }
         
         .security-notice-title {
             font-size: 16px;
             font-weight: 600;
-            color: #742a2a;
+            color: #28251F;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
@@ -163,39 +163,39 @@ export function generateOTPEmailTemplate(otp) {
         
         .security-notice-text {
             font-size: 14px;
-            color: #9b2c2c;
+            color: #736C5F;
             line-height: 1.6;
         }
         
         .help-section {
-            background: #f7fafc;
+            background: #E4DFD3;
             padding: 25px;
             border-radius: 12px;
             margin: 30px 0;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #736C5F;
         }
         
         .help-text {
             font-size: 14px;
-            color: #4a5568;
+            color: #28251F !important;
             line-height: 1.6;
             margin-bottom: 12px;
         }
         
         .support-link {
-            color: #667eea;
+            color: #736C5F !important;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
         
         .support-link:hover {
-            color: #764ba2;
+            color: #28251F;
         }
         
         .footer {
-            background: #1a202c;
-            color: #a0aec0;
+            background: #28251F;
+            color: #E4DFD3;
             padding: 30px 40px;
             text-align: center;
         }
@@ -204,7 +204,7 @@ export function generateOTPEmailTemplate(otp) {
             font-family: 'Playfair Display', serif;
             font-size: 24px;
             font-weight: 600;
-            color: #ffffff;
+            color: #E4DFD3;
             margin-bottom: 15px;
         }
         
@@ -212,7 +212,7 @@ export function generateOTPEmailTemplate(otp) {
             font-size: 13px;
             line-height: 1.8;
             margin-bottom: 10px;
-            color: #ffffff;
+            color: #E4DFD3;
         }
         
         .footer-links {
@@ -220,7 +220,7 @@ export function generateOTPEmailTemplate(otp) {
         }
         
         .footer-link {
-            color: #667eea;
+            color: #736C5F !important;
             text-decoration: none;
             font-weight: 500;
             margin: 0 15px;
@@ -228,12 +228,12 @@ export function generateOTPEmailTemplate(otp) {
         }
         
         .footer-link:hover {
-            color: #9f7aea;
+            color: #E4DFD3;
         }
         
         .divider {
             height: 1px;
-            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+            background: linear-gradient(to right, transparent, #736C5F, transparent);
             margin: 20px 0;
         }
         

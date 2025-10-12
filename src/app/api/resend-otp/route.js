@@ -45,6 +45,32 @@ export async function POST(request) {
       );
     }
 
+    // Check for recent OTP requests (rate limiting - 10 minutes)
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+    const recentOTP = await otpModel.findOne({
+      email,
+      createdAt: { $gte: tenMinutesAgo },
+    });
+
+    if (recentOTP) {
+      const timeLeft = Math.ceil(
+        (recentOTP.createdAt.getTime() + 10 * 60 * 1000 - Date.now()) / 1000
+      );
+      const minutesLeft = Math.floor(timeLeft / 60);
+      const secondsLeft = timeLeft % 60;
+
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Please wait ${minutesLeft}:${secondsLeft
+            .toString()
+            .padStart(2, "0")} before requesting a new OTP`,
+          timeLeft: timeLeft,
+        },
+        { status: 429 }
+      );
+    }
+
     // Delete any existing OTPs for this email
     await otpModel.deleteMany({ email });
 
