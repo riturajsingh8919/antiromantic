@@ -126,14 +126,14 @@ function Dashboard() {
         <div className="container py-12">
           <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Welcome Back!</h1>
+              <h1 className="text-4xl font-medium mb-2">Welcome Back!</h1>
               <p className="text-text text-lg">{getFullName()}</p>
               <p className="text-text text-base">{user?.email}</p>
             </div>
             <div className="lg:text-right space-y-2">
               <div className="flex gap-2 items-center">
                 <p className="text-[#736c5f] text-base">Total Orders</p>
-                <p className="text-[#736c5f] text-2xl font-bold">
+                <p className="text-[#736c5f] text-2xl font-medium">
                   {orders.length}
                 </p>
               </div>
@@ -187,7 +187,7 @@ function Dashboard() {
                 <div className="p-6 border-[1px] border-gray-300">
                   <div className="flex justify-between items-center">
                     <div>
-                      <h2 className="text-2xl font-bold flex items-center">
+                      <h2 className="text-2xl text-[#736C5F] font-medium flex items-center">
                         <Package className="w-6 h-6 mr-3" />
                         Order History
                       </h2>
@@ -253,10 +253,10 @@ function Dashboard() {
                       </p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-10">
                       {orders.map((order) => (
                         <div key={order._id} className="transition-shadow">
-                          <div className="flex flex-col lg:flex-row gap-4 justify-between items-start mb-4">
+                          <div className="flex flex-col md:flex-row gap-10 md:gap-4 justify-between items-start mb-4">
                             <div>
                               <h3 className="text-lg font-semibold text-[#736c5f] mb-1">
                                 Order #{order.orderNumber}
@@ -272,33 +272,31 @@ function Dashboard() {
                                 </span>
                               </div>
                             </div>
-                            <div className="flex flex-col gap-2 lg:text-right">
-                              <div className="text-2xl font-bold text-[#736c5f] mb-1">
+                            <div className="flex flex-col gap-2 md:text-right">
+                              <div className="text-2xl font-medium text-[#736c5f] mb-1">
                                 {formatPrice(order.total)}
                               </div>
                               <div className="space-y-2">
-                                <div className={`text-lg font-medium`}>
+                                <div
+                                  className={`text-lg font-normal text-[#736C5F]`}
+                                >
                                   order status:{" "}
-                                  {order.status?.charAt(0).toUpperCase() +
-                                    order.status?.slice(1) || "pending"}
+                                  <span className="font-medium">
+                                    {order.status?.charAt(0).toUpperCase() +
+                                      order.status?.slice(1) || "pending"}
+                                  </span>
                                 </div>
-                                {order.trackingNumber && (
-                                  <div className="text-base text-[#827C71]">
-                                    <span className="font-medium">
-                                      Tracking:
-                                    </span>{" "}
-                                    {order.trackingNumber}
-                                  </div>
-                                )}
                                 {order.paymentStatus && (
                                   <div
-                                    className={`text-base px-2 py-1 rounded`}
+                                    className={`text-base px-2 py-1 text-[#736C5F]`}
                                   >
                                     Payment:{" "}
-                                    {order.paymentStatus
-                                      ?.charAt(0)
-                                      .toUpperCase() +
-                                      order.paymentStatus?.slice(1)}
+                                    <span className="font-medium">
+                                      {order.paymentStatus
+                                        ?.charAt(0)
+                                        .toUpperCase() +
+                                        order.paymentStatus?.slice(1)}
+                                    </span>
                                   </div>
                                 )}
                               </div>
@@ -307,7 +305,7 @@ function Dashboard() {
 
                           {/* Order Items */}
 
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {order.items && order.items.length > 0 && (
                               <div className="space-y-2 border border-gray-300 p-3">
                                 <h4 className="font-medium text-[#736c5f] mb-5 flex items-center">
@@ -332,11 +330,21 @@ function Dashboard() {
                                           {item.productName}
                                         </p>
                                         {item.variant && (
-                                          <p className="text-base text-[#827C71]">
-                                            {item.variant.size &&
-                                              `Size: ${item.variant.size}`}
-                                            {item.variant.color &&
-                                              ` • Color: ${item.variant.color}`}
+                                          <p className="text-base text-[#827C71] flex items-center gap-3">
+                                            {item.variant.size && (
+                                              <span>
+                                                Size:
+                                                <span className="!uppercase">
+                                                  {" "}
+                                                  {item.variant.size}
+                                                </span>
+                                              </span>
+                                            )}
+                                            {item.variant.color && (
+                                              <span>
+                                                Color: {item.variant.color}
+                                              </span>
+                                            )}
                                           </p>
                                         )}
                                         <p className="text-base text-[#827C71]">
@@ -345,7 +353,7 @@ function Dashboard() {
                                       </div>
                                     </div>
                                     <div className="text-right">
-                                      <p className="font-medium">
+                                      <p className="font-medium text-[#736c5f]">
                                         {formatPrice(item.totalPrice)}
                                       </p>
                                       <p className="text-base text-[#827C71]">
@@ -359,12 +367,12 @@ function Dashboard() {
 
                             {order.shippingAddress && (
                               <div className="border border-gray-300 p-4">
-                                <h4 className="font-medium text-gray-900 mb-2 flex items-center">
+                                <h4 className="font-medium text-[#736C5F] mb-2 flex items-center">
                                   <MapPin className="w-4 h-4 mr-1" />
                                   Shipping Address
                                 </h4>
-                                <div className="text-base text-gray-700 space-y-1">
-                                  <p className="font-medium">
+                                <div className="text-base text-[#736C5F] space-y-1">
+                                  <p>
                                     {order.shippingAddress.firstName}{" "}
                                     {order.shippingAddress.lastName}
                                   </p>
@@ -401,7 +409,7 @@ function Dashboard() {
                 <div className="p-6 border-[1px] border-b-gray-300">
                   <div className="flex flex-col lg:flex-row gap-4 justify-between items-start lg:items-center">
                     <div>
-                      <h2 className="text-2xl font-bold flex items-center">
+                      <h2 className="text-2xl font-medium flex items-center text-[#736C5F]">
                         <User className="w-6 h-6 mr-3" />
                         Profile Information
                       </h2>
@@ -424,7 +432,7 @@ function Dashboard() {
                 </div>
 
                 <div className="p-6">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Personal Information */}
                     <div className="space-y-6">
                       <div className="relative border border-gray-300 p-3">
@@ -456,7 +464,7 @@ function Dashboard() {
                               )}
                             </div>
                             <div>
-                              <label className="block text-base font-medium text-gray-700 mb-1">
+                              <label className="block text-base font-medium text-[#736C5F] mb-1">
                                 Last Name
                               </label>
                               {isEditing ? (
@@ -479,10 +487,10 @@ function Dashboard() {
                             </div>
                           </div>
                           <div>
-                            <label className="block text-base font-medium text-gray-700 mb-1">
+                            <label className="block text-base font-medium text-[#736C5F] mb-1">
                               Email
                             </label>
-                            <p className="text-gray-900 py-2 flex items-center">
+                            <p className="text-[#736C5F] py-2 flex items-center">
                               <Mail className="w-4 h-4 mr-2" />
                               {user?.email}
                             </p>
@@ -499,13 +507,13 @@ function Dashboard() {
                     {/* Address Information */}
                     <div className="space-y-6">
                       <div className="p-3 border border-gray-300">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                        <h3 className="text-lg font-semibold text-[#736C5F] mb-4">
                           Address Details
                         </h3>
                         <div className="space-y-4">
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-base font-medium text-gray-700 mb-1">
+                              <label className="block text-base font-medium text-[#736C5F] mb-1">
                                 Address Line 1
                               </label>
                               {isEditing ? (
@@ -527,7 +535,7 @@ function Dashboard() {
                               )}
                             </div>
                             <div>
-                              <label className="block text-base font-medium text-gray-700 mb-1">
+                              <label className="block text-base font-medium text-[#736C5F] mb-1">
                                 Address Line 2
                               </label>
                               {isEditing ? (
@@ -551,7 +559,7 @@ function Dashboard() {
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-base font-medium text-gray-700 mb-1">
+                              <label className="block text-base font-medium text-[#736C5F] mb-1">
                                 City
                               </label>
                               {isEditing ? (
@@ -573,7 +581,7 @@ function Dashboard() {
                               )}
                             </div>
                             <div>
-                              <label className="block text-base font-medium text-gray-700 mb-1">
+                              <label className="block text-base font-medium text-[#736C5F] mb-1">
                                 State
                               </label>
                               {isEditing ? (
@@ -597,7 +605,7 @@ function Dashboard() {
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-base font-medium text-gray-700 mb-1">
+                              <label className="block text-base font-medium text-[#736C5F] mb-1">
                                 ZIP Code
                               </label>
                               {isEditing ? (
@@ -619,7 +627,7 @@ function Dashboard() {
                               )}
                             </div>
                             <div>
-                              <label className="block text-base font-medium text-gray-700 mb-1">
+                              <label className="block text-base font-medium text-[#736C5F] mb-1">
                                 Phone
                               </label>
                               {isEditing ? (
@@ -652,7 +660,7 @@ function Dashboard() {
                     <div className="mt-8 flex justify-end space-x-4">
                       <button
                         onClick={cancelEdit}
-                        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#736c5f] hover:text-white transition-colors flex items-center"
+                        className="px-6 py-2 border border-[#736C5F] text-[#736C5F] rounded-lg hover:bg-[#736c5f] hover:text-[#E4DFD3] transition-colors flex items-center"
                       >
                         <X className="w-4 h-4 mr-2" />
                         Cancel
@@ -660,11 +668,11 @@ function Dashboard() {
                       <button
                         onClick={saveProfile}
                         disabled={updating}
-                        className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-bold tracking-wider hover:bg-[#28251F] hover:text-white transition-colors flex items-center justify-center gap-2 border-b-2 border-[#736C5F] cursor-pointer"
+                        className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-medium tracking-wider hover:bg-[#736C5F] hover:text-[#E4DFD3] transition-colors flex items-center justify-center gap-2 border-b-1 border-[#736C5F] cursor-pointer"
                       >
                         {updating ? (
                           <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#E4DFD3] mr-2"></div>
                             Saving...
                           </>
                         ) : (

@@ -269,65 +269,65 @@ const CheckoutPage = () => {
             <div className="flex items-center justify-center space-x-8">
               <div
                 className={`flex items-center space-x-2 ${
-                  currentStep >= 1 ? "text-[#28251F]" : "text-[#A7A091]"
+                  currentStep >= 1 ? "text-[#736C5F]" : "text-[#E4DFD3]"
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
                     currentStep >= 1
-                      ? "border-[#28251F] bg-[#28251F] text-white"
-                      : "border-[#A7A091]"
+                      ? "border-[#736C5F] bg-[#736C5F] text-[#E4DFD3]"
+                      : "border-[#E4DFD3]"
                   }`}
                 >
                   {currentStep > 1 ? <Check className="w-4 h-4" /> : "1"}
                 </div>
-                <span className="text-base font-medium">shipping</span>
+                <span className="text-base font-normal">shipping</span>
               </div>
 
               <div
                 className={`w-16 h-0.5 ${
-                  currentStep >= 2 ? "bg-[#28251F]" : "bg-[#A7A091]"
+                  currentStep >= 2 ? "bg-[#736C5F]" : "bg-[#E4DFD3]"
                 }`}
               ></div>
 
               <div
                 className={`flex items-center space-x-2 ${
-                  currentStep >= 2 ? "text-[#28251F]" : "text-[#A7A091]"
+                  currentStep >= 2 ? "text-[#736C5F]" : "text-[#E4DFD3]"
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
                     currentStep >= 2
-                      ? "border-[#28251F] bg-[#28251F] text-white"
-                      : "border-[#A7A091]"
+                      ? "border-[#736C5F] bg-[#736C5F] text-[#E4DFD3]"
+                      : "border-[#E4DFD3]"
                   }`}
                 >
                   {currentStep > 2 ? <Check className="w-4 h-4" /> : "2"}
                 </div>
-                <span className="text-base font-medium">payment</span>
+                <span className="text-base font-normal">payment</span>
               </div>
 
               <div
                 className={`w-16 h-0.5 ${
-                  currentStep >= 3 ? "bg-[#28251F]" : "bg-[#A7A091]"
+                  currentStep >= 3 ? "bg-[#736C5F]" : "bg-[#E4DFD3]"
                 }`}
               ></div>
 
               <div
                 className={`flex items-center space-x-2 ${
-                  currentStep >= 3 ? "text-[#28251F]" : "text-[#A7A091]"
+                  currentStep >= 3 ? "text-[#736C5F]" : "text-[#E4DFD3]"
                 }`}
               >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center border-2 ${
                     currentStep >= 3
-                      ? "border-[#28251F] bg-[#28251F] text-white"
-                      : "border-[#A7A091]"
+                      ? "border-[#736C5F] bg-[#736C5F] text-[#E4DFD3]"
+                      : "border-[#E4DFD3]"
                   }`}
                 >
                   {currentStep > 3 ? <Check className="w-4 h-4" /> : "3"}
                 </div>
-                <span className="text-base font-medium">review</span>
+                <span className="text-base font-normal">review</span>
               </div>
             </div>
           </div>
@@ -340,7 +340,7 @@ const CheckoutPage = () => {
                 {currentStep === 1 && (
                   <div className="space-y-8">
                     <div>
-                      <h2 className="text-xl font-medium text-[#28251F] mb-6">
+                      <h2 className="text-xl font-normal text-[#28251F] mb-6">
                         shipping information
                       </h2>
 
@@ -348,7 +348,7 @@ const CheckoutPage = () => {
                         <div className="space-y-2">
                           <Label
                             htmlFor="firstName"
-                            className="text-base font-medium text-[#28251F]"
+                            className="text-base font-normal text-[#28251F]"
                           >
                             first name *
                           </Label>
@@ -375,7 +375,7 @@ const CheckoutPage = () => {
                         <div className="space-y-2">
                           <Label
                             htmlFor="lastName"
-                            className="text-base font-medium text-[#28251F]"
+                            className="text-base font-normal text-[#28251F]"
                           >
                             last name *
                           </Label>
@@ -402,7 +402,7 @@ const CheckoutPage = () => {
                         <div className="space-y-2">
                           <Label
                             htmlFor="email"
-                            className="text-base font-medium text-[#28251F]"
+                            className="text-base font-normal text-[#28251F]"
                           >
                             email address *
                           </Label>
@@ -429,7 +429,7 @@ const CheckoutPage = () => {
                         <div className="space-y-2">
                           <Label
                             htmlFor="phone"
-                            className="text-base font-medium text-[#28251F]"
+                            className="text-base font-normal text-[#28251F]"
                           >
                             phone number *
                           </Label>
@@ -458,7 +458,7 @@ const CheckoutPage = () => {
                         <div className="space-y-2">
                           <Label
                             htmlFor="address"
-                            className="text-base font-medium text-[#28251F]"
+                            className="text-base font-normal text-[#28251F]"
                           >
                             address *
                           </Label>
@@ -485,7 +485,7 @@ const CheckoutPage = () => {
                         <div className="space-y-2">
                           <Label
                             htmlFor="apartment"
-                            className="text-base font-medium text-[#28251F]"
+                            className="text-base font-normal text-[#28251F]"
                           >
                             apartment, suite, etc.
                           </Label>
@@ -503,7 +503,7 @@ const CheckoutPage = () => {
                           <div className="space-y-2">
                             <Label
                               htmlFor="city"
-                              className="text-base font-medium text-[#28251F]"
+                              className="text-base font-normal text-[#28251F]"
                             >
                               city *
                             </Label>
@@ -530,7 +530,7 @@ const CheckoutPage = () => {
                           <div className="space-y-2">
                             <Label
                               htmlFor="state"
-                              className="text-base font-medium text-[#28251F]"
+                              className="text-base font-normal text-[#28251F]"
                             >
                               state *
                             </Label>
@@ -557,7 +557,7 @@ const CheckoutPage = () => {
                           <div className="space-y-2">
                             <Label
                               htmlFor="pincode"
-                              className="text-base font-medium text-[#28251F]"
+                              className="text-base font-normal text-[#28251F]"
                             >
                               pincode *
                             </Label>
@@ -588,7 +588,7 @@ const CheckoutPage = () => {
                       <button
                         type="button"
                         onClick={handleNextStep}
-                        className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-black tracking-wider hover:bg-[#28251F] hover:text-white transition-colors border-b-2 border-[#736C5F] cursor-pointer"
+                        className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-medium tracking-wider hover:bg-[#736C5F] hover:text-[#E4DFD3] transition-colors border-b-1 border-[#736C5F] cursor-pointer"
                       >
                         continue to payment
                       </button>
@@ -600,7 +600,7 @@ const CheckoutPage = () => {
                 {currentStep === 2 && (
                   <div className="space-y-8">
                     <div>
-                      <h2 className="text-xl font-medium text-[#28251F] mb-6">
+                      <h2 className="text-xl font-normal text-[#28251F] mb-6">
                         payment method
                       </h2>
 
@@ -668,7 +668,7 @@ const CheckoutPage = () => {
                           <div className="space-y-2">
                             <Label
                               htmlFor="cardName"
-                              className="text-base font-medium text-[#28251F]"
+                              className="text-base font-normal text-[#28251F]"
                             >
                               cardholder name *
                             </Label>
@@ -695,7 +695,7 @@ const CheckoutPage = () => {
                           <div className="space-y-2">
                             <Label
                               htmlFor="cardNumber"
-                              className="text-base font-medium text-[#28251F]"
+                              className="text-base font-normal text-[#28251F]"
                             >
                               card number *
                             </Label>
@@ -723,7 +723,7 @@ const CheckoutPage = () => {
                             <div className="space-y-2">
                               <Label
                                 htmlFor="expiryDate"
-                                className="text-base font-medium text-[#28251F]"
+                                className="text-base font-normal text-[#28251F]"
                               >
                                 expiry date *
                               </Label>
@@ -750,7 +750,7 @@ const CheckoutPage = () => {
                             <div className="space-y-2">
                               <Label
                                 htmlFor="cvv"
-                                className="text-base font-medium text-[#28251F]"
+                                className="text-base font-normal text-[#28251F]"
                               >
                                 cvv *
                               </Label>
@@ -782,14 +782,14 @@ const CheckoutPage = () => {
                       <button
                         type="button"
                         onClick={handlePrevStep}
-                        className="bg-[#D0C9BE] text-[#28251F] py-2 px-6 text-lg font-black tracking-wider hover:bg-[#28251F] hover:text-white transition-colors border-b-2 border-[#28251F] cursor-pointer"
+                        className="bg-[#D0C9BE] text-[#28251F] py-2 px-6 text-lg font-medium tracking-wider hover:bg-[#736C5F] hover:text-[#E4DFD3] transition-colors border-b-1 border-[#736C5F] cursor-pointer"
                       >
                         back
                       </button>
                       <button
                         type="button"
                         onClick={handleNextStep}
-                        className="bg-[#E4DFD3] text-[#736C5F] py-2 px-6 text-lg font-black tracking-wider hover:bg-[#28251F] hover:text-white transition-colors border-b-2 border-[#736C5F] cursor-pointer"
+                        className="bg-[#E4DFD3] text-[#28251F] py-2 px-6 text-lg font-medium tracking-wider hover:bg-[#736C5F] hover:text-[white] transition-colors border-b-1 border-[#736C5F] cursor-pointer"
                       >
                         review order
                       </button>
@@ -801,7 +801,7 @@ const CheckoutPage = () => {
                 {currentStep === 3 && (
                   <div className="space-y-8">
                     <div>
-                      <h2 className="text-xl font-medium text-[#28251F] mb-6">
+                      <h2 className="text-xl font-normal text-[#28251F] mb-6">
                         review your order
                       </h2>
 
@@ -818,14 +818,16 @@ const CheckoutPage = () => {
                               className="w-16 h-20 object-cover"
                             />
                             <div className="flex-1">
-                              <h3 className="text-base font-medium text-[#28251F]">
+                              <h3 className="text-base font-normal text-[#28251F]">
                                 {item.name}
                               </h3>
                               <p className="text-base text-[#736C5F]">
-                                size {item.size} • qty {item.quantity}
+                                size{" "}
+                                <span className="!uppercase">{item.size}</span>{" "}
+                                • qty {item.quantity}
                               </p>
                             </div>
-                            <p className="text-base font-medium text-[#28251F]">
+                            <p className="text-base font-normal text-[#28251F]">
                               inr{" "}
                               {(item.price * item.quantity).toLocaleString()}
                             </p>
@@ -836,7 +838,7 @@ const CheckoutPage = () => {
                       {/* Shipping & Payment Summary */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div>
-                          <h3 className="text-base font-medium text-[#28251F] mb-4">
+                          <h3 className="text-base font-normal text-[#28251F] mb-4">
                             shipping address
                           </h3>
                           <div className="text-base text-[#736C5F] space-y-1">
@@ -855,7 +857,7 @@ const CheckoutPage = () => {
                         </div>
 
                         <div>
-                          <h3 className="text-base font-medium text-[#28251F] mb-4">
+                          <h3 className="text-base font-normal text-[#28251F] mb-4">
                             payment method
                           </h3>
                           <div className="text-base text-[#736C5F]">
@@ -880,13 +882,13 @@ const CheckoutPage = () => {
                       <button
                         type="button"
                         onClick={handlePrevStep}
-                        className="bg-[#D0C9BE] text-[#28251F] py-3 px-6 text-lg font-black tracking-wider hover:bg-[#28251F] hover:text-white transition-colors border-b-2 border-[#28251F] cursor-pointer"
+                        className="bg-[#D0C9BE] text-[#28251F] py-3 px-6 text-lg font-medium tracking-wider hover:bg-[#28251F] hover:text-white transition-colors border-b-2 border-[#28251F] cursor-pointer"
                       >
                         back
                       </button>
                       <button
                         type="submit"
-                        className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-black tracking-wider hover:bg-[#28251F] hover:text-white transition-colors border-b-2 border-[#736C5F] flex items-center gap-2 cursor-pointer"
+                        className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-medium tracking-wider hover:bg-[#28251F] hover:text-white transition-colors border-b-2 border-[#736C5F] flex items-center gap-2 cursor-pointer"
                       >
                         place order
                       </button>
@@ -899,7 +901,7 @@ const CheckoutPage = () => {
             {/* Order Summary Sidebar */}
             <div className="w-full lg:w-[35%]">
               <div className="bg-white/30 p-6 space-y-6">
-                <h3 className="text-lg font-medium text-[#28251F]">
+                <h3 className="text-lg font-normal text-[#28251F]">
                   order summary
                 </h3>
 
@@ -913,7 +915,7 @@ const CheckoutPage = () => {
                       <span className="text-[#28251F]">
                         {item.name} ({item.size}) × {item.quantity}
                       </span>
-                      <span className="text-[#736C5F] font-medium">
+                      <span className="text-[#736C5F] font-normal">
                         inr {(item.price * item.quantity).toLocaleString()}
                       </span>
                     </div>
@@ -926,13 +928,13 @@ const CheckoutPage = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between text-base">
                     <span className="text-[#28251F]">subtotal</span>
-                    <span className="text-[#736C5F] font-medium">
+                    <span className="text-[#736C5F] font-normal">
                       inr {orderValue.toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between text-base">
                     <span className="text-[#28251F]">shipping</span>
-                    <span className="text-[#736C5F] font-medium">
+                    <span className="text-[#736C5F] font-normal">
                       {shipping === 0 ? "FREE" : `inr ${shipping}`}
                     </span>
                   </div>
@@ -946,7 +948,7 @@ const CheckoutPage = () => {
                           </span>
                         )}
                       </span>
-                      <span className="text-gray-700 font-medium">
+                      <span className="text-gray-700 font-normal">
                         -inr{discount.toLocaleString()}
                       </span>
                     </div>
@@ -956,7 +958,7 @@ const CheckoutPage = () => {
                 <hr className="border-[#D0C9BE]" />
 
                 <div className="flex justify-between">
-                  <span className="text-base font-medium text-[#28251F]">
+                  <span className="text-base font-normal text-[#28251F]">
                     total
                   </span>
                   <span className="text-lg font-bold text-[#28251F]">
@@ -968,7 +970,7 @@ const CheckoutPage = () => {
                 <div className="flex items-center gap-3 p-3 bg-[#D0C9BE]/30 rounded">
                   <Shield className="w-5 h-5 text-[#28251F] mt-0.5" />
                   <div className="text-base text-[#28251F]">
-                    <p className="font-black text-lg">secure checkout</p>
+                    <p className="font-medium text-lg">secure checkout</p>
                     <p>your payment information is encrypted and secure</p>
                   </div>
                 </div>
@@ -977,7 +979,7 @@ const CheckoutPage = () => {
                 <div className="flex items-center gap-3 p-3 bg-[#D0C9BE]/30 rounded">
                   <Truck className="w-5 h-5 text-[#28251F] mt-0.5" />
                   <div className="text-base text-[#28251F]">
-                    <p className="font-black text-lg">free shipping</p>
+                    <p className="font-medium text-lg">free shipping</p>
                     <p>on orders above inr2,000</p>
                   </div>
                 </div>

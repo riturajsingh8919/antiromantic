@@ -292,7 +292,7 @@ function ResetPasswordPage() {
                           name="email"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="mb-3 text-base text-text">
+                              <FormLabel className="mb-3 text-base text-text font-normal">
                                 Email
                               </FormLabel>
                               <FormControl>
@@ -345,7 +345,7 @@ function ResetPasswordPage() {
                           name="newPassword"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="mb-3 text-base text-text">
+                              <FormLabel className="mb-3 text-base text-text font-normal">
                                 New Password
                               </FormLabel>
                               <FormControl>
@@ -369,7 +369,7 @@ function ResetPasswordPage() {
                           name="confirmPassword"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="mb-3 text-base text-text">
+                              <FormLabel className="mb-3 text-base text-text font-normal">
                                 confirm Password
                               </FormLabel>
                               <FormControl>

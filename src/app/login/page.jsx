@@ -185,7 +185,7 @@ function LogInPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="mb-3 text-base text-text">
+                          <FormLabel className="mb-3 text-base text-text font-normal">
                             Email
                           </FormLabel>
                           <FormControl>
@@ -209,7 +209,7 @@ function LogInPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="mb-3 text-base text-text">
+                          <FormLabel className="mb-3 text-base text-text font-normal">
                             Password
                           </FormLabel>
                           <FormControl>

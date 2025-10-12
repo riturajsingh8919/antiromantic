@@ -54,14 +54,14 @@ function ProfileModal({ children, textColor = "#F7F5EB" }) {
             <div className="flex items-center space-x-3">
               <Avatar className="h-12 w-12">
                 <AvatarFallback
-                  className="text-white font-medium text-lg"
+                  className="text-white font-normal text-lg"
                   style={{ backgroundColor: "#736c5f" }}
                 >
                   {user?.username?.charAt(0)?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
               <div className="space-y-1">
-                <p className="text-base font-medium leading-none">
+                <p className="text-base font-normal leading-none">
                   {user?.username}
                 </p>
                 <p

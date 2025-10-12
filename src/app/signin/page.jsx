@@ -196,7 +196,7 @@ function SignInPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="mb-1 text-base text-text">
+                          <FormLabel className="mb-1 text-base text-text font-normal">
                             Email
                           </FormLabel>
                           <FormControl>
@@ -220,7 +220,7 @@ function SignInPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="mb-1 text-base text-text">
+                          <FormLabel className="mb-1 text-base text-text font-normal">
                             Password
                           </FormLabel>
                           <FormControl>
@@ -246,7 +246,7 @@ function SignInPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="mb-1 text-base text-text">
+                          <FormLabel className="mb-1 text-base text-text font-normal">
                             Name
                           </FormLabel>
                           <FormControl>
@@ -270,7 +270,7 @@ function SignInPage() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="mb-1 text-base text-text">
+                          <FormLabel className="mb-1 text-base text-text font-normal">
                             Phone Number
                           </FormLabel>
                           <FormControl>
@@ -308,7 +308,7 @@ function SignInPage() {
                       <div className="grid gap-2">
                         <Label
                           htmlFor="terms-2"
-                          className="text-base text-[#736C5F]"
+                          className="text-base text-[#736C5F] font-normal"
                         >
                           i accept the{" "}
                           <Link href="/privacy-policy" className="underline">

@@ -51,7 +51,7 @@ function AboutSectionThree() {
 
   return (
     <section className="relative bg-[url('/about/about-sec-2-bg.jpg')] bg-no-repeat bg-cover overflow-x-hidden -mt-1">
-      <div className="relative flex flex-col-reverse md:flex-row lg:items-center">
+      <div className="relative flex flex-col-reverse md:flex-row">
         {/* Left side - Text content */}
         <motion.div
           className="w-full md:w-[45%] flex items-center"
@@ -60,7 +60,7 @@ function AboutSectionThree() {
           viewport={{ once: true, amount: 0.2 }}
           variants={containerVariants}
         >
-          <div className="flex flex-col gap-8 px-4 md:px-0 md:max-w-[80%] mx-auto py-16 md:py-0">
+          <div className="flex flex-col gap-8 px-4 md:px-0 md:max-w-[80%] mx-auto py-16">
             {/* Icon */}
             <motion.div variants={textFadeVariants}>
               <Image
@@ -112,7 +112,7 @@ function AboutSectionThree() {
             alt="About Section Image"
             width={500}
             height={300}
-            className="w-full md:w-fit md:h-[70vh] object-contain"
+            className="w-full md:w-fit md:h-[38vh] lg:h-[60vh] object-contain"
           />
         </motion.div>
       </div>

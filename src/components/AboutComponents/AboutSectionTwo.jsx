@@ -102,7 +102,7 @@ function AboutSectionTwo() {
 
             {/* Heading */}
             <motion.h2
-              className="text-text text-3xl lg:text-4xl relative"
+              className="text-text text-2xl lg:text-3xl relative"
               variants={textFadeVariants}
             >
               A LITTLE ROMANCE FOR YOU,

@@ -66,9 +66,9 @@ function HomeSectionSix() {
               height={40}
               className="w-[40px] h-[40px] object-contain -top-1 relative"
             />
-            <h2 className="text-[#817C73] text-lg xl:text-3xl">
+            <h2 className="text-[#817C73] text-base xl:text-3xl">
               Unfiltered.{" "}
-              <span className="block ml-12">Unapologetically You</span>
+              <span className="block ml-5 lg:ml-12">Unapologetically You</span>
             </h2>
           </motion.div>
 
@@ -84,9 +84,9 @@ function HomeSectionSix() {
               height={40}
               className="w-[40px] h-[40px] object-contain -top-1 relative"
             />
-            <h2 className="text-[#817C73] text-lg xl:text-3xl">
+            <h2 className="text-[#817C73] text-base xl:text-3xl">
               Unfiltered.{" "}
-              <span className="block ml-12">Unapologetically You</span>
+              <span className="block ml-5 lg:ml-12">Unapologetically You</span>
             </h2>
           </motion.div>
 
@@ -102,9 +102,9 @@ function HomeSectionSix() {
               height={40}
               className="w-[40px] h-[40px] object-contain -top-1 relative"
             />
-            <h2 className="text-[#817C73] text-lg xl:text-3xl">
+            <h2 className="text-[#817C73] text-base xl:text-3xl">
               Unfiltered.{" "}
-              <span className="block ml-12">Unapologetically You</span>
+              <span className="block ml-5 lg:ml-12">Unapologetically You</span>
             </h2>
           </motion.div>
         </motion.div>

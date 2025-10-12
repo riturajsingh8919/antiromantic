@@ -30,6 +30,41 @@ const CartPageContent = () => {
     shippingSettings,
   } = useCart();
   const [activeTab, setActiveTab] = useState("cart");
+  const [productImages, setProductImages] = useState({});
+
+  // Fetch product images from image manager
+  const fetchProductImages = async () => {
+    try {
+      const response = await fetch("/api/admin/image-manager?limit=1000");
+      const result = await response.json();
+
+      if (result.success) {
+        // Create a mapping of productId to images
+        const imageMap = {};
+        result.data.forEach((item) => {
+          // Handle different productId formats
+          let productIdString;
+          if (typeof item.productId === "string") {
+            productIdString = item.productId;
+          } else if (item.productId && item.productId._id) {
+            productIdString = item.productId._id;
+          } else if (item.productId && item.productId.$oid) {
+            productIdString = item.productId.$oid;
+          } else {
+            productIdString = item.productId.toString();
+          }
+
+          imageMap[productIdString] = {
+            normal: item.normalImage,
+            hover: item.hoverImage,
+          };
+        });
+        setProductImages(imageMap);
+      }
+    } catch (error) {
+      console.error("Error fetching product images:", error);
+    }
+  };
 
   // Handle URL parameter for active tab
   useEffect(() => {
@@ -38,6 +73,11 @@ const CartPageContent = () => {
       setActiveTab(tabParam);
     }
   }, [searchParams]);
+
+  // Fetch product images from image manager
+  useEffect(() => {
+    fetchProductImages();
+  }, []);
 
   // Update URL when tab changes
   const handleTabChange = (tab) => {
@@ -136,9 +176,9 @@ const CartPageContent = () => {
             <div className="flex">
               <button
                 onClick={() => handleTabChange("wishlist")}
-                className={`px-0 py-4 mr-8 text-lg font-light transition-colors cursor-pointer ${
+                className={`px-0 py-4 mr-8 text-lg xl:text-2xl font-normal transition-colors cursor-pointer ${
                   activeTab === "wishlist"
-                    ? "text-[#656056] !font-black"
+                    ? "text-[#656056]"
                     : "text-[#A7A091] hover:text-[#28251F]"
                 }`}
               >
@@ -146,9 +186,9 @@ const CartPageContent = () => {
               </button>
               <button
                 onClick={() => handleTabChange("cart")}
-                className={`px-0 py-4 text-lg font-light transition-colors cursor-pointer ${
+                className={`px-0 py-4 text-lg xl:text-2xl font-normal transition-colors cursor-pointer ${
                   activeTab === "cart"
-                    ? "text-[#656056] !font-black"
+                    ? "text-[#656056]"
                     : "text-[#A7A091] hover:text-[#28251F]"
                 }`}
               >
@@ -185,11 +225,14 @@ const CartPageContent = () => {
                         {/* Product Details */}
                         <div className="flex-1 flex flex-col gap-6 lg:flex-row items-start justify-between">
                           <div>
-                            <h3 className="text-base font-medium text-[#28251F]">
+                            <h3 className="text-base font-normal text-[#28251F]">
                               {item.name}
                             </h3>
                             <p className="text-base text-[#28251F]">
-                              size {item.size}
+                              size{" "}
+                              <span className="!uppercase ml-1">
+                                {item.size}
+                              </span>
                             </p>
                           </div>
 
@@ -197,7 +240,7 @@ const CartPageContent = () => {
                           <div className="flex items-center gap-3">
                             <button
                               onClick={() => handleUpdateQuantity(item.id, -1)}
-                              className="w-8 h-8 flex items-center justify-center border border-[#736C5F] hover:border-[#28251F] hover:bg-[#28251F] hover:text-white transition-colors cursor-pointer"
+                              className="w-8 h-8 flex items-center justify-center border border-[#736C5F] hover:border-[#736C5F] hover:bg-[#736C5F] hover:text-[#E4DFD3] transition-colors cursor-pointer"
                               disabled={item.quantity <= 1}
                             >
                               <Minus className="w-3 h-3" />
@@ -207,7 +250,7 @@ const CartPageContent = () => {
                             </span>
                             <button
                               onClick={() => handleUpdateQuantity(item.id, 1)}
-                              className="w-8 h-8 flex items-center justify-center border border-[#736C5F] hover:border-[#28251F] hover:bg-[#28251F] hover:text-white transition-colors cursor-pointer"
+                              className="w-8 h-8 flex items-center justify-center border border-[#736C5F] hover:border-[#736C5F] hover:bg-[#736C5F] hover:text-[#E4DFD3] transition-colors cursor-pointer"
                             >
                               <Plus className="w-3 h-3" />
                             </button>
@@ -337,7 +380,7 @@ const CartPageContent = () => {
                   {/* Final Total */}
                   <div className="flex flex-col gap-4 mt-6">
                     <div className="flex justify-between">
-                      <span className="text-base font-medium text-[#28251F]">
+                      <span className="text-base font-normal text-[#28251F]">
                         total
                       </span>
                       <span className="text-lg font-black text-[#736C5F]">
@@ -349,7 +392,7 @@ const CartPageContent = () => {
                   {/* Checkout Button */}
                   <button
                     onClick={handleCheckout}
-                    className="w-full bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-bold tracking-wider hover:bg-[#28251F] hover:text-white transition-colors flex items-center justify-center gap-2 border-b-2 border-[#736C5F] cursor-pointer"
+                    className="w-full bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-medium tracking-wider hover:bg-[#736C5F] hover:text-[#E4DFD3] transition-colors flex items-center justify-center gap-2 border-b-1 border-[#736C5F] cursor-pointer"
                   >
                     checkout now
                   </button>
@@ -364,7 +407,7 @@ const CartPageContent = () => {
               {/* Wishlist Header */}
               {wishlistItems.length > 0 && (
                 <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-xl font-medium text-[#28251F]">
+                  <h3 className="text-xl font-normal text-[#28251F]">
                     Wishlist ({wishlistItems.length}{" "}
                     {wishlistItems.length === 1 ? "item" : "items"})
                   </h3>
@@ -373,7 +416,7 @@ const CartPageContent = () => {
                       clearWishlist();
                       toast.success("Wishlist cleared");
                     }}
-                    className="text-gray-500 hover:text-gray-700 transition-colors text-base font-medium"
+                    className="text-[#736C5F] hover:text-gray-700 transition-colors text-base font-medium"
                   >
                     Clear All
                   </button>
@@ -393,7 +436,7 @@ const CartPageContent = () => {
                     product
                   </p>
                   <Link href="/store">
-                    <button className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-bold tracking-wider hover:bg-[#28251F] hover:text-white transition-colors flex items-center justify-center gap-2 border-b-2 border-[#736C5F] cursor-pointer">
+                    <button className="bg-[#E4DFD3] text-[#736C5F] py-3 px-6 text-lg font-medium tracking-wider hover:bg-[#736C5F] hover:text-[#E4DFD3] transition-colors flex items-center justify-center gap-2 border-b-1 border-[#736C5F] cursor-pointer">
                       Continue Shopping
                     </button>
                   </Link>
@@ -407,23 +450,32 @@ const CartPageContent = () => {
                         className="relative bg-gray-100 mb-6 overflow-hidden cursor-pointer"
                         onClick={() => handleProductClick(product)}
                       >
+                        {/* Normal Image */}
                         <img
                           src={
-                            product.images?.[0]?.url || "/store/product1.png"
+                            productImages[product._id]?.normal?.url ||
+                            product.images?.[0]?.url ||
+                            "/store/product1.png"
                           }
-                          alt={product.images?.[0]?.alt || product.name}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          alt={
+                            productImages[product._id]?.normal?.alt ||
+                            product.images?.[0]?.alt ||
+                            product.name
+                          }
+                          className="w-full h-full object-cover group-hover:opacity-0 transition-opacity duration-0"
                         />
 
-                        {/* Hover Overlay with View Product */}
-                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                          <div className="flex items-end gap-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 text-xl">
-                            <Eye className="size-6 text-[#ffffff]" />
-                            <span className="text-[#ffffff] font-black">
-                              View Product
-                            </span>
-                          </div>
-                        </div>
+                        {/* Hover Image */}
+                        {productImages[product._id]?.hover && (
+                          <img
+                            src={productImages[product._id].hover.url}
+                            alt={
+                              productImages[product._id].hover.alt ||
+                              product.name
+                            }
+                            className="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-0"
+                          />
+                        )}
 
                         {/* Featured Badge */}
                         {product.isFeatured && (
@@ -439,27 +491,27 @@ const CartPageContent = () => {
                           className="text-left flex-1 cursor-pointer"
                           onClick={() => handleProductClick(product)}
                         >
-                          <h3 className="text-base font-medium text-[#28251F] mb-1 tracking-wide hover:opacity-70 transition-opacity capitalize text-left">
+                          <h3 className="text-base font-normal text-[#28251F] mb-1 tracking-wide hover:opacity-70 transition-opacity capitalize text-left">
                             {product.name}
                           </h3>
 
                           <div className="flex items-center gap-2 mb-1">
-                            <p className="text-lg text-[#736C5F] font-bold">
+                            <p className="text-lg text-[#736C5F] font-medium">
                               inr{product.price.toLocaleString()}
                             </p>
                             {product.comparePrice &&
                               product.comparePrice > product.price && (
-                                <p className="text-base text-gray-400 line-through">
+                                <p className="text-base text-[#736C5F] line-through">
                                   inr{product.comparePrice.toLocaleString()}
                                 </p>
                               )}
                           </div>
 
                           {/* Color and Stock Info */}
-                          <div className="flex items-center gap-2 text-base text-gray-500 mb-2">
+                          <div className="flex items-center gap-2 text-base text-[#736C5F] mb-2">
                             {product.totalStock <= 5 &&
                               product.totalStock > 0 && (
-                                <span className="text-gray-500 font-medium">
+                                <span className="text-[#736C5F] font-medium">
                                   Only {product.totalStock} left
                                 </span>
                               )}

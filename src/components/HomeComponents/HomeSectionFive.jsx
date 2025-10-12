@@ -85,7 +85,7 @@ function HomeSectionFive() {
     >
       <div className="container">
         <motion.div
-          className="relative grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 md:max-w-[75%] mx-auto"
+          className="relative grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 md:max-w-[95%] lg:max-w-[80%] mx-auto"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}

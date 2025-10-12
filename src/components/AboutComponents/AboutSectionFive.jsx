@@ -76,7 +76,7 @@ function AboutSectionFive() {
               alt="Section 5 Icon"
               width={500}
               height={500}
-              className="w-full md:w-auto h-full md:h-[70vh] object-cover"
+              className="w-auto h-auto xl:h-[70vh] object-cover"
             />
           </div>
 

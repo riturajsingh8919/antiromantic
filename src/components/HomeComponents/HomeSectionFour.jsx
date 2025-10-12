@@ -122,7 +122,7 @@ function HomeSectionFour() {
                   height={1169}
                   className="w-full h-auto object-cover"
                 />
-                <h2 className="text-[#817C73] text-base absolute top-[10%] left-[5%] font-normal">
+                <h2 className="text-[#817C73] text-base absolute top-[10%] left-[2%] font-normal">
                   {leftImg.title}{" "}
                   <span className="ml-6 block">{leftImg.subtitle}</span>
                 </h2>
@@ -159,7 +159,7 @@ function HomeSectionFour() {
               height={1169}
               className="w-full h-auto object-cover"
             />
-            <h2 className="text-[#817C73] text-lg xl:text-2xl absolute top-[10%] left-[5%] font-normal">
+            <h2 className="text-[#817C73] text-lg xl:text-2xl absolute top-[10%] left-[2%] font-normal">
               {leftImages[activeImageIndex].title}{" "}
               <span className="ml-6 block">
                 {leftImages[activeImageIndex].subtitle}
