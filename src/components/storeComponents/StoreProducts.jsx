@@ -23,6 +23,7 @@ function StoreProducts() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [productImages, setProductImages] = useState({});
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 20,
@@ -53,6 +54,52 @@ function StoreProducts() {
         { key: "dresses", label: "dresses", count: 0 },
         { key: "sets", label: "sets", count: 0 },
       ]);
+    }
+  };
+
+  // Fetch product images from image manager
+  const fetchProductImages = async () => {
+    try {
+      console.log("Fetching product images from image manager...");
+      const response = await fetch("/api/admin/image-manager?limit=1000");
+      const result = await response.json();
+
+      console.log("Image manager API response:", result);
+
+      if (result.success) {
+        // Create a mapping of productId to images
+        const imageMap = {};
+        result.data.forEach((item) => {
+          console.log("Processing item:", item);
+          console.log("Item productId:", item.productId);
+          console.log("Type of productId:", typeof item.productId);
+
+          // Handle different productId formats
+          let productIdString;
+          if (typeof item.productId === "string") {
+            productIdString = item.productId;
+          } else if (item.productId && item.productId._id) {
+            productIdString = item.productId._id;
+          } else if (item.productId && item.productId.$oid) {
+            productIdString = item.productId.$oid;
+          } else {
+            productIdString = item.productId.toString();
+          }
+
+          console.log("Final productIdString:", productIdString);
+
+          imageMap[productIdString] = {
+            normal: item.normalImage,
+            hover: item.hoverImage,
+          };
+        });
+        console.log("Created image map:", imageMap);
+        setProductImages(imageMap);
+      } else {
+        console.error("Image manager API error:", result.error);
+      }
+    } catch (error) {
+      console.error("Error fetching product images:", error);
     }
   };
 
@@ -114,6 +161,7 @@ function StoreProducts() {
   // Initial data fetch
   useEffect(() => {
     fetchCategories();
+    fetchProductImages();
   }, []);
 
   // Fetch products when filters change
@@ -369,89 +417,116 @@ function StoreProducts() {
 
         {/* Products Grid */}
         {!loading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="group cursor-pointer"
-                onClick={() => handleProductClick(product.slug)}
-              >
-                {/* Product Image Container with Hover Overlay */}
-                <div className="relative bg-gray-100 mb-6 overflow-hidden">
-                  <img
-                    src={product.images?.[0]?.url || "/store/product1.png"}
-                    alt={product.images?.[0]?.alt || product.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 gap-y-16">
+            {products.map((product) => {
+              console.log(`Product ${product.name} (ID: ${product._id}):`, {
+                hasImageManagerData: !!productImages[product._id],
+                imageManagerData: productImages[product._id],
+                fallbackImage: product.images?.[0]?.url,
+              });
 
-                  {/* Hover Overlay with View Product */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="flex items-end gap-2 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300 text-xl">
-                      <Eye className="size-6 text-[#ffffff]" />
-                      <span className="text-[#ffffff] font-black">
-                        View Product
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Featured Badge */}
-                  {product.isFeatured && (
-                    <div className="absolute top-3 left-3 bg-[#28251F] text-white px-2 py-1 text-base font-medium rounded">
-                      Featured
-                    </div>
-                  )}
-                </div>
-
-                {/* Product Info */}
-                <div className="flex justify-between items-start">
-                  <div className="text-left flex-1">
-                    <h3 className="text-base font-normal text-[#28251F] mb-1 tracking-wide capitalize">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className="text-lg text-[#736C5F] font-medium">
-                        inr{product.price.toLocaleString()}
-                      </p>
-                      {product.comparePrice &&
-                        product.comparePrice > product.price && (
-                          <p className="text-base text-[#736C5F] line-through">
-                            inr{product.comparePrice.toLocaleString()}
-                          </p>
-                        )}
-                    </div>
-
-                    {/* Color and Stock Info */}
-                    <div className="flex items-center gap-2 text-base text-gray-500">
-                      {product.totalStock <= 5 && product.totalStock > 0 && (
-                        <span className="text-orange-500 font-medium">
-                          Only {product.totalStock} left
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Wishlist Heart Icon */}
-                  <button
-                    onClick={(e) => handleWishlistToggle(product, e)}
-                    className="transition-all duration-300 hover:scale-110 cursor-pointer ml-2"
-                    title={
-                      isInWishlist(product._id)
-                        ? "Remove from wishlist"
-                        : "Add to wishlist"
-                    }
-                  >
-                    <Heart
-                      className={`w-5 h-5 font-medium ${
-                        isInWishlist(product._id)
-                          ? "text-[#B7CEDA] fill-[#B7CEDA]"
-                          : "text-[#28251F] hover:text-[#28251F]"
-                      }`}
-                      strokeWidth={1.5}
+              return (
+                <div
+                  key={product._id}
+                  className="group cursor-pointer"
+                  onClick={() => handleProductClick(product.slug)}
+                >
+                  {/* Product Image Container with Hover Overlay */}
+                  <div className="relative bg-gray-100 mb-6 overflow-hidden">
+                    {/* Normal Image */}
+                    <img
+                      src={
+                        productImages[product._id]?.normal?.url ||
+                        product.images?.[0]?.url ||
+                        "/store/product1.png"
+                      }
+                      alt={
+                        productImages[product._id]?.normal?.alt ||
+                        product.images?.[0]?.alt ||
+                        product.name
+                      }
+                      className="w-full h-full object-cover group-hover:opacity-0 transition-opacity duration-0"
                     />
-                  </button>
+
+                    {/* Hover Image */}
+                    {productImages[product._id]?.hover && (
+                      <img
+                        src={productImages[product._id].hover.url}
+                        alt={
+                          productImages[product._id].hover.alt || product.name
+                        }
+                        className="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-0"
+                      />
+                    )}
+
+                    {/* Hover Overlay with View Product */}
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="flex text-sm md:text-[12px] xl:text-base">
+                        <span className="text-[#28251F] font-normal">
+                          View Product
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Featured Badge */}
+                    {product.isFeatured && (
+                      <div className="absolute top-3 left-3 bg-[#28251F] text-white px-2 py-1 text-base font-medium rounded">
+                        Featured
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="flex justify-between items-start">
+                    <div className="text-left flex-1">
+                      <h3 className="text-base font-normal text-[#28251F] mb-1 tracking-wide capitalize">
+                        {product.name}
+                      </h3>
+                      <div className="flex items-center gap-2 mb-1">
+                        <p className="text-lg text-[#736C5F] font-medium">
+                          inr{product.price.toLocaleString()}
+                        </p>
+                        {product.comparePrice &&
+                          product.comparePrice > product.price && (
+                            <p className="text-base text-[#736C5F] line-through">
+                              inr{product.comparePrice.toLocaleString()}
+                            </p>
+                          )}
+                      </div>
+
+                      {/* Color and Stock Info */}
+                      <div className="flex items-center gap-2 text-base text-gray-500">
+                        {product.totalStock <= 5 && product.totalStock > 0 && (
+                          <span className="text-orange-500 font-medium">
+                            Only {product.totalStock} left
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Wishlist Heart Icon */}
+                    <button
+                      onClick={(e) => handleWishlistToggle(product, e)}
+                      className="transition-all duration-300 hover:scale-110 cursor-pointer ml-2"
+                      title={
+                        isInWishlist(product._id)
+                          ? "Remove from wishlist"
+                          : "Add to wishlist"
+                      }
+                    >
+                      <Heart
+                        className={`w-5 h-5 font-medium ${
+                          isInWishlist(product._id)
+                            ? "text-[#B7CEDA] fill-[#B7CEDA]"
+                            : "text-[#28251F] hover:text-[#28251F]"
+                        }`}
+                        strokeWidth={1.5}
+                      />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
