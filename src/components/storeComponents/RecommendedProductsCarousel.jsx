@@ -41,7 +41,7 @@ const RecommendedProductsCarousel = ({
   showNavigation = true,
   slidesToShow = {
     mobile: 1,
-    tablet: 2,
+    tablet: 3,
     desktop: 4,
   },
   onProductClick = () => {},
@@ -58,10 +58,45 @@ const RecommendedProductsCarousel = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState(null);
   const [dragOffset, setDragOffset] = useState(0);
+  const [productImages, setProductImages] = useState({});
 
   const carouselRef = useRef(null);
   const touchStartRef = useRef(null);
   const autoSlideRef = useRef(null);
+
+  // Fetch product images from image manager
+  const fetchProductImages = async () => {
+    try {
+      const response = await fetch("/api/admin/image-manager?limit=1000");
+      const result = await response.json();
+
+      if (result.success) {
+        // Create a mapping of productId to images
+        const imageMap = {};
+        result.data.forEach((item) => {
+          // Handle different productId formats
+          let productIdString;
+          if (typeof item.productId === "string") {
+            productIdString = item.productId;
+          } else if (item.productId && item.productId._id) {
+            productIdString = item.productId._id;
+          } else if (item.productId && item.productId.$oid) {
+            productIdString = item.productId.$oid;
+          } else {
+            productIdString = item.productId.toString();
+          }
+
+          imageMap[productIdString] = {
+            normal: item.normalImage,
+            hover: item.hoverImage,
+          };
+        });
+        setProductImages(imageMap);
+      }
+    } catch (error) {
+      console.error("Error fetching product images:", error);
+    }
+  };
 
   // Default product data matching the store structure
   const defaultProducts = [
@@ -158,6 +193,11 @@ const RecommendedProductsCarousel = ({
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  // Fetch product images from image manager
+  useEffect(() => {
+    fetchProductImages();
   }, []);
 
   // Get current slides to show based on screen size
@@ -412,7 +452,7 @@ const RecommendedProductsCarousel = ({
           {showViewAll && (
             <Link
               href="/store"
-              className="hidden md:block text-lg font-medium text-[#28251F] hover:text-black transition-colors cursor-pointer"
+              className="hidden md:block text-lg font-normal underline text-[#28251F] hover:text-black transition-colors cursor-pointer"
             >
               view all
             </Link>
@@ -456,21 +496,38 @@ const RecommendedProductsCarousel = ({
                 >
                   {/* Product Image Container */}
                   <div className="relative bg-gray-100 mb-6 overflow-hidden">
+                    {/* Normal Image */}
                     <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                      src={
+                        productImages[product.id]?.normal?.url || product.image
+                      }
+                      alt={
+                        productImages[product.id]?.normal?.alt || product.name
+                      }
+                      className="w-full h-auto object-cover group-hover:opacity-0 transition-opacity duration-0"
                       draggable={false}
                     />
+
+                    {/* Hover Image */}
+                    {productImages[product.id]?.hover && (
+                      <img
+                        src={productImages[product.id].hover.url}
+                        alt={
+                          productImages[product.id].hover.alt || product.name
+                        }
+                        className="w-full h-auto object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-0"
+                        draggable={false}
+                      />
+                    )}
                   </div>
 
                   {/* Product Info */}
                   <div className="flex justify-between items-start">
                     <div className="text-left">
-                      <h3 className="text-base font-medium text-[#28251F] mb-1 tracking-wide leading-normal">
+                      <h3 className="text-base font-normal text-[#28251F] mb-1 tracking-wide leading-normal">
                         {product.name}
                       </h3>
-                      <p className="text-lg text-[#736C5F] font-bold">
+                      <p className="text-lg text-[#736C5F] font-medium">
                         inr{product.price.toLocaleString()}
                       </p>
                     </div>

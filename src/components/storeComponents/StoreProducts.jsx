@@ -331,7 +331,7 @@ function StoreProducts() {
                         setSelectedSize(size);
                         setShowSizeDropdown(false);
                       }}
-                      className={`w-full text-left px-4 py-2 text-base cursor-pointer hover:bg-white ${
+                      className={`w-full text-left px-4 py-2 text-base !uppercase cursor-pointer hover:bg-white ${
                         selectedSize === size
                           ? "text-[#312D26] bg-white"
                           : "text-[#312D26]"
