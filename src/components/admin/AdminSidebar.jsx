@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   Tag,
+  MousePointer,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -73,6 +74,12 @@ const menuItems = [
     href: "/admin/media",
     icon: Image,
     description: "Upload and manage images",
+  },
+  {
+    title: "Image Manager",
+    href: "/admin/image-manager",
+    icon: MousePointer,
+    description: "Manage normal & hover images",
   },
   {
     title: "Settings",
