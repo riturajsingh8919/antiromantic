@@ -2,26 +2,38 @@
 
 import { motion } from "framer-motion";
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const item = {
+  hidden: { scaleY: 0, opacity: 0 },
+  show: {
+    scaleY: 1,
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  },
+};
+
 export default function CurtainRevealSection({ children }) {
   return (
     <motion.div
-      initial={{
-        scaleY: 0,
-        opacity: 0,
-      }}
-      whileInView={{
-        scaleY: 1,
-        opacity: 1,
-      }}
-      transition={{
-        duration: 0.8,
-        ease: [0.25, 0.46, 0.45, 0.94],
-        opacity: { duration: 0.5 },
-      }}
+      variants={container}
+      initial="hidden"
+      whileInView="show"
       viewport={{ once: true, amount: 0.2 }}
-      style={{ originY: 0 }}
+      style={{ overflow: "hidden" }}
     >
-      {children}
+      <motion.div variants={item}>{children}</motion.div>
     </motion.div>
   );
 }

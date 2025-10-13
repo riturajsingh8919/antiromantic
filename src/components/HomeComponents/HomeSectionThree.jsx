@@ -31,15 +31,13 @@ function HomeSectionThree() {
     },
   };
 
-  // Image animation
-  const imageVariants = {
-    hidden: { opacity: 0, scale: 0.9, x: -50 },
+  // Simple fade animation for image
+  const imageFadeVariants = {
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      scale: 1,
-      x: 0,
       transition: {
-        duration: 1,
+        duration: 0.8,
         ease: [0.25, 0.1, 0.25, 1],
       },
     },
@@ -49,13 +47,13 @@ function HomeSectionThree() {
     <section className="relative bg-[url('/home-sec-3-bg.png')] bg-no-repeat bg-cover py-16 md:px-10">
       <div className="container flex items-center justify-center">
         <div className="relative flex flex-col md:flex-row gap-4 lg:gap-16 bg-[url('/home-sec-3-bg-front.png')] bg-no-repeat bg-cover lg:w-[100%] x1280 xl:w-[72%] p-4 md:p-10 lg:p-15 xl:p-20">
-          {/* Animated Image */}
+          {/* Image with simple fade - no movement */}
           <motion.div
             className="relative md:w-[40%]"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
-            variants={imageVariants}
+            variants={imageFadeVariants}
           >
             <Image
               src="/home-sec-3-img.png"
