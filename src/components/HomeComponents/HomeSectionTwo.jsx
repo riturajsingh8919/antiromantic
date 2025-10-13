@@ -4,9 +4,9 @@ import CurtainRevealSection from "@/components/CurtainRevealSection";
 
 function HomeSectionTwo() {
   return (
-    <CurtainRevealSection curtainColor="bg-[#e7e1d5]">
-      <section className="relative bg-[url('/home-sec-2-bg.png')] bg-no-repeat bg-cover py-16 md:px-10">
-        <div className="container">
+    <section className="relative bg-[url('/home-sec-2-bg.png')] bg-no-repeat bg-cover py-16 md:px-10">
+      <div className="container">
+        <CurtainRevealSection>
           <div className="max-w-2xl mx-auto flex flex-col items-center justify-center gap-4">
             <div className="flex flex-col md:flex-row gap-2 md:gap-4">
               <h2 className="text-[#827C71] text-xl lg:text-3xl">
@@ -41,9 +41,9 @@ function HomeSectionTwo() {
               <h2 className="text-[#827C71] text-xl lg:text-3xl">self-love</h2>
             </div>
           </div>
-        </div>
-      </section>
-    </CurtainRevealSection>
+        </CurtainRevealSection>
+      </div>
+    </section>
   );
 }
 
